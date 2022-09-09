@@ -1,0 +1,15 @@
+.tw-btn{
+    @apply tw-px-10 tw-py-3 tw-rounded-lg tw-text-center tw-no-underline ;
+}
+
+.tw-btn-dark {
+    @apply tw-bg-gray-900 tw-text-white;
+}
+
+.tw-btn-white {
+    @apply tw-bg-white tw-text-gray-900;
+}
+
+.tw-input {
+    @apply tw-bg-gray-200 tw-border tw-border-gray-300 tw-p-1 ;
+}

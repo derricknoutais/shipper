@@ -40,9 +40,9 @@ class CommandeController extends Controller
         } else {
             $products = Product::all();
         }
+
         $templates = Template::with('products')->get();
         $commandes = Commande::all();
-
         foreach($commande->sections as $section){
 
         }

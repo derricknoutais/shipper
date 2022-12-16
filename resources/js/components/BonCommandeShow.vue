@@ -147,7 +147,7 @@ export default {
             // console.log('hello')
             if(sect.sectionnable_type === "App\\Article" ){
                 console.log('hello')
-                axios.get('https://azimuts.ga/article/api/' + sect.sectionnable_id ).then(response => {
+                axios.get('https://azimuts.gq/article/api/' + sect.sectionnable_id ).then(response => {
 
                     sect.article = response.data
                     this.$forceUpdate()

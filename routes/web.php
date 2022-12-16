@@ -1,5 +1,5 @@
 <?php
-ini_set('max_execution_time', 180);
+
 // use DB;
 use App\Sales;
 use App\Handle;
@@ -16,6 +16,8 @@ use App\Sectionnable;
 use GuzzleHttp\Client;
 use App\Jobs\SyncSales;
 use App\Events\SectionAdded;
+use App\Jobs\InsertPulledProductsToDatabase;
+use App\Jobs\PullProductsFromPullDBIntoRedis;
 use App\Jobs\UpdateProducts;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -27,14 +29,9 @@ if(env('APP_ENV') === 'local')
     Auth::loginUsingId(1);
 // Welcome
 Route::get('/', function () {
-    // $client = new Client();
-    // $headers = [
-    //     "Authorization" => "Bearer " . env('VEND_TOKEN'),
-    //     "Accept"        => "application/json"
-    // ];
-    // $response = $client->request('GET', 'https://stapog.vendhq.com/api/3.0/products', ['headers' => $headers]);
-    // return $data = json_decode((string) $response->getBody(), true);
-    // return sizeof($data['data']);
+
+    // PullProductsFromPullDBIntoRedis::dispatch();
+    InsertPulledProductsToDatabase::dispatch();
     return view('accueil');
 });
 Route::get('/tesst', function () {
@@ -394,9 +391,6 @@ Route::middleware(['auth'])->group(function () {
         ]);
     });
 
-
-
-
     Route::get('/quantite-vendue/{product}', function($product){
         return Sales::where('product_id', $product)->first();
     });
@@ -414,7 +408,7 @@ Route::middleware(['auth'])->group(function () {
             "Authorization" => "Bearer " . env('VEND_TOKEN'),
             'Accept'        => 'application/json',
         ];
-        $response = $client->request('GET', 'http://subzero.azimuts.ga/api/sub/' . $product . ($apres ?  '/' . $apres : null ) . ($avant ?  '/' . $avant : null));
+        $response = $client->request('GET', 'http://subzero.azimuts.gq/api/sub/' . $product . ($apres ?  '/' . $apres : null ) . ($avant ?  '/' . $avant : null));
         return $data = json_decode((string) $response->getBody(), true);
     });
 
@@ -559,7 +553,7 @@ Route::middleware(['auth'])->group(function () {
             'Accept'        => 'application/json',
         ];
         $pages = array();
-        for ($j = 21; $j <= 23; $j++) {
+        for ($j = 23; $j <= 24; $j++) {
             $response = $client->request('GET', 'https://stapog.vendhq.com/api/products?page_size=200&page=' . $j, ['headers' => $headers]);
              $data = json_decode((string) $response->getBody(), true);
             array_push($pages, $data['products']);
@@ -567,10 +561,14 @@ Route::middleware(['auth'])->group(function () {
         foreach ($pages as $products) {
             foreach ($products as $product) {
                 if (! Product::where('id', $product['id'])->first()) {
-
+                    if(! $handle = Handle::where('name', $product['handle'])->first()){
+                        $handle = Handle::create([
+                            'name' => $product['handle']
+                        ]);
+                    }
                     $prod = Product::create([
                         'id' => $product['id'],
-                        // 'handle' => $product['handle'],
+                        'handle_id' => $handle->id,
                         'name' => $product['name'],
                         'sku' => $product['sku'],
                         'price' => $product['price'],

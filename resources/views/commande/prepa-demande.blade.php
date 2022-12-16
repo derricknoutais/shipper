@@ -135,7 +135,7 @@
                                         <i class="fas fa-chevron-right tw-cursor-pointer" v-else @click="toggleRow(article)"></i>
                                     </td>
                                     <td scope="row">
-                                        <a :href=" 'http://azimuts.ga/fiche-renseignement/' + article.fiche_renseignement_id " target="_blank">
+                                        <a :href=" 'http://azimuts.gq/fiche-renseignement/' + article.fiche_renseignement_id " target="_blank">
                                         0af7n3os-{{ rand(1000,9999) }}-ff13-kj{{ rand(100,999) }}-@{{ article.fiche_renseignement_id   }}
                                         </a>
                                     </td>
@@ -221,7 +221,7 @@
                                     <input type="checkbox" v-model="selected_products"  :value="produit">
                                 </td>
                                 <td scope="row">
-                                    <a :href=" 'http://azimuts.ga/fiche-renseignement/' + produit.fiche_renseignement_id " target="_blank">
+                                    <a :href=" 'http://azimuts.gq/fiche-renseignement/' + produit.fiche_renseignement_id " target="_blank">
                                     0af7n3os-{{ rand(1000,9999) }}-ff13-kj{{ rand(100,999) }}-@{{ produit.fiche_renseignement_id   }}
                                     </a>
                                 </td>

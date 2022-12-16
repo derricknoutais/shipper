@@ -195,7 +195,7 @@ export default {
                                 if(! found){
                                     axios.post('/demande-sectionnable', { products: sel_prod, demandes: sel_dem}).then(response => {
                                         if(sel_prod.pivot.sectionnable_type === 'App\\Article'){
-                                            axios.get('https://azimuts.ga/article/api/changer-etat/' + this.selected_element.id + '/demandé').then(response => {
+                                            axios.get('https://azimuts.gq/article/api/changer-etat/' + this.selected_element.id + '/demandé').then(response => {
                                             }).catch(error => {
                                                 console.log(error);
                                             });

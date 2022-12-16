@@ -13,6 +13,7 @@ use App\Reorderpoint;
 use App\Sectionnable;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redis;
 use Maatwebsite\Excel\Facades\Excel;
 
 
@@ -27,13 +28,13 @@ class CommandeController extends Controller
 
     public function show(Commande $commande){
 
-        // return $commande->loadMissing('products', 'templates', 'templates.products', 'sections', 'sections.articles', 'sections.products', 'demandes', 'demandes.sectionnables', 'bonsCommandes', 'bonsCommandes.sectionnables');
         $commande->loadMissing('products', 'templates', 'templates.products', 'sections', 'sections.sectionnables', 'sections.sectionnables.product', 'sections.sectionnables.article', 'sections.sectionnables.bon_commande',  'sections.products', 'demandes', 'demandes.sectionnables', 'bonsCommandes', 'bonsCommandes.sectionnables', 'factures');
+
 
         $sections = Section::where('commande_id', $commande->id)->pluck('id');
         $id_articles = Sectionnable::where(['sectionnable_type' => 'App\Article'])->whereIn('section_id', $sections)->get();
 
-        $products = Product::all();
+        $products = Redis::get('pulldb_products');
         $templates = Template::with('products')->get();
         $commandes = Commande::all();
 

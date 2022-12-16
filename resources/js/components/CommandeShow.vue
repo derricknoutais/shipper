@@ -120,7 +120,7 @@ export default {
             }
             this.isLoading.article = true
             console.log(query)
-            axios.get('https://azimuts.ga/article/api/search/' + query).then(response => {
+            axios.get('https://azimuts.gq/article/api/search/' + query).then(response => {
                 console.log(response.data);
                 this.articlesApi = response.data
             }).catch(error => {
@@ -254,7 +254,7 @@ export default {
                             },
                         });
                         this.$forceUpdate()
-                        axios.get('https://azimuts.ga/article/api/changer-etat/' + this.selected_element.id + '/wished').then(response => {
+                        axios.get('https://azimuts.gq/article/api/changer-etat/' + this.selected_element.id + '/wished').then(response => {
                             this.$swal({
                                 icon: 'success',
                                 title: 'Succès',
@@ -520,7 +520,7 @@ export default {
                                     timer: 1500
                                 })
                             } else {
-                                axios.get('https://azimuts.ga/article/api/changer-etat/' + produit.pivot.id + '/enregistré').then(response => {
+                                axios.get('https://azimuts.gq/article/api/changer-etat/' + produit.pivot.id + '/enregistré').then(response => {
                                     console.log(response.data);
                                     var index = section.articles.indexOf(produit)
                                     section.articles.splice(index, 1)
@@ -698,11 +698,12 @@ export default {
                 return '*********'
             }
             var prix_moyen = 0
-            return prix_moyen = total / (this.commande.demandes.length)
+            if(this.commande.demandes.length > 0)
+                return prix_moyen = total / (this.commande.demandes.length)
         },
         list_type(){
             if(this.sectionnable_type === 'Product'){
-                this.label = 'name'
+                this.label = 'variant_name'
                 return this.products
             } else if(this.sectionnable_type === 'Template'){
                 this.label = 'name'
@@ -725,8 +726,11 @@ export default {
             this.commande = this.commande_prop
         }
 
+
+
         if(this.products_prop){
             this.products = this.products_prop
+
             this.products.map( product => {
                 product.message = {
                     text : '',
@@ -749,7 +753,7 @@ export default {
             article_ids.push(article.sectionnable_id)
         });
 
-        axios.post('https://azimuts.ga/article/api/bulk-fetch',  article_ids ).then( response => {
+        axios.post('https://azimuts.gq/article/api/bulk-fetch',  article_ids ).then( response => {
             console.log(response.data)
             this.articlesFetched = response.data;
             this.articlesFetched.forEach( artFetched => {

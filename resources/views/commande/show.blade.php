@@ -361,7 +361,7 @@
                                     >
                                         <tr v-for="(sectionnable) in section.sectionnables" v-if="sectionnable.sectionnable_type === 'App\\Product' " :key="sectionnable.id" >
                                             <td scope="row">
-                                                <a :href=" 'http://azimuts.ga/fiche-renseignement/'  + sectionnable.fiche_renseignement_id" v-if="sectionnable.product">@{{sectionnable.product.name}}</a>
+                                                <a :href=" 'http://azimuts.gq/fiche-renseignement/'  + sectionnable.fiche_renseignement_id" v-if="sectionnable.product">@{{sectionnable.product.name}}</a>
                                             </td>
                                             <td>
                                                 <div class="form-group">
@@ -399,7 +399,7 @@
                                     >
                                         <tr v-for="sectionnable in section.sectionnables" :key="sectionnable.id" v-if="sectionnable.sectionnable_type === 'App\\Article' ">
                                             <td scope="row">
-                                                <a v-if="sectionnable.article" :href=" 'http://azimuts.ga/fiche-renseignement/'  + sectionnable.article.fiche_renseignement_id" >@{{sectionnable.article.nom}}</a>
+                                                <a v-if="sectionnable.article" :href=" 'http://azimuts.gq/fiche-renseignement/'  + sectionnable.article.fiche_renseignement_id" >@{{sectionnable.article.nom}}</a>
                                                 <span v-if="sectionnable.article && sectionnable.article.fiche_renseignement && sectionnable.article.fiche_renseignement.marque"> / @{{sectionnable.article.fiche_renseignement.marque.nom}}</span>
                                                 <span v-if="sectionnable.article && sectionnable.article.fiche_renseignement && sectionnable.article.fiche_renseignement.type"> @{{sectionnable.article.fiche_renseignement.type.nom}}</span>
                                                 <span v-if="sectionnable.article && sectionnable.article.fiche_renseignement && sectionnable.article.fiche_renseignement.modèle"> ( @{{sectionnable.article.fiche_renseignement.modèle.nom}}</span>

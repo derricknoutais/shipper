@@ -412,9 +412,7 @@ Route::middleware(['auth'])->group(function () {
         return $data = json_decode((string) $response->getBody(), true);
     });
 
-
     // VEND API
-
     Route::post('/creer-bl', function(Request $request){
         $client = new Client();
         $headers = [
@@ -502,7 +500,6 @@ Route::middleware(['auth'])->group(function () {
         }
         return $totaux;
     });
-
     Route::get('/api/stock/{product}', function(Product $product){
         return $product->quantity;
         $client = new Client();
@@ -517,7 +514,6 @@ Route::middleware(['auth'])->group(function () {
         return $data['data'][0]['inventory_level'];
 
     });
-
     Route::get('/vend/update-quantities', function(){
         $client = new Client();
         $headers = [

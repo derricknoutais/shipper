@@ -34,7 +34,12 @@ class CommandeController extends Controller
         $sections = Section::where('commande_id', $commande->id)->pluck('id');
         $id_articles = Sectionnable::where(['sectionnable_type' => 'App\Article'])->whereIn('section_id', $sections)->get();
 
-        $products = Redis::get('pulldb_products');
+
+        if($pull = Redis::get('pulldb_products')){
+            $products = $pull;
+        } else {
+            $products = Product::all();
+        }
         $templates = Template::with('products')->get();
         $commandes = Commande::all();
 

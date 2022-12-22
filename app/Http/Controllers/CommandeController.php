@@ -30,7 +30,6 @@ class CommandeController extends Controller
 
         $commande->loadMissing('products', 'templates', 'templates.products', 'sections', 'sections.sectionnables', 'sections.sectionnables.product', 'sections.sectionnables.article', 'sections.sectionnables.bon_commande',  'sections.products', 'demandes', 'demandes.sectionnables', 'bonsCommandes', 'bonsCommandes.sectionnables', 'factures');
 
-
         $sections = Section::where('commande_id', $commande->id)->pluck('id');
         $id_articles = Sectionnable::where(['sectionnable_type' => 'App\Article'])->whereIn('section_id', $sections)->get();
 
@@ -46,8 +45,6 @@ class CommandeController extends Controller
         foreach($commande->sections as $section){
 
         }
-
-
         return view('commande.show', compact('commande', 'products','templates', 'id_articles', 'commandes' ));
     }
 

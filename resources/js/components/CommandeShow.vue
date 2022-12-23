@@ -703,7 +703,7 @@ export default {
         },
         list_type(){
             if(this.sectionnable_type === 'Product'){
-                this.label = 'variant_name'
+                this.label = 'name'
                 return this.products
             } else if(this.sectionnable_type === 'Template'){
                 this.label = 'name'

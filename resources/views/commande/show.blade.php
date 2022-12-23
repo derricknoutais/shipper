@@ -293,7 +293,7 @@
                                     <multiselect
                                         v-model="selected_element" :options="list_type"
                                         :searchable="true" :show-labels="false"
-                                        placeholder="Pick a value" label="name"
+                                        placeholder="Pick a value" :label="label"
                                         id="select" @search-change="asyncFind"
                                     >
                                     </multiselect>

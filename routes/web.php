@@ -549,9 +549,9 @@ Route::middleware(['auth'])->group(function () {
             'Accept'        => 'application/json',
         ];
         $pages = array();
-        for ($j = 23; $j <= 24; $j++) {
+        for ($j = 23; $j <= 26; $j++) {
             $response = $client->request('GET', 'https://stapog.vendhq.com/api/products?page_size=200&page=' . $j, ['headers' => $headers]);
-             $data = json_decode((string) $response->getBody(), true);
+            $data = json_decode((string) $response->getBody(), true);
             array_push($pages, $data['products']);
         }
         foreach ($pages as $products) {

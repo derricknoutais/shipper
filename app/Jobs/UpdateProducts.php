@@ -17,7 +17,6 @@ use Illuminate\Support\Facades\Log;
 class UpdateProducts implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-    public $timeout = 0;
     /**
      * Create a new job instance.
      *
@@ -41,12 +40,17 @@ class UpdateProducts implements ShouldQueue
             'Accept'        => 'application/json',
         ];
         $pages = array();
-        for ($j = 1; $j <= 25; $j++) {
+        $nb_prod = 0;
+        for ($j = 16; $j <= 30; $j++) {
             $response = $client->request('GET', 'https://stapog.vendhq.com/api/products?page_size=200&page=' . $j, ['headers' => $headers]);
             $data = json_decode((string) $response->getBody(), true);
             array_push($pages, $data['products']);
-            Log::info('Finished Rotation ' . $j);
+            $nb_prod += sizeof($data['products']);
+            Log::info('Finished Rotation ' . $j . 'with ' . sizeof($data['products']) . ' products soit ' . $nb_prod . ' au total' );
         }
+        $k = 0;
+        $nb_pages = sizeof($pages);
+        Log::info('Size Of Pages ' . sizeof($pages)  );
         foreach ($pages as $products) {
             foreach ($products as $product) {
                 if(!$handle = Handle::where('name' , $product['handle'])->first()){
@@ -74,6 +78,9 @@ class UpdateProducts implements ShouldQueue
                             'quantity' => ( (int) $product['inventory'][0]['count'] )
                         ]) ;
                     }
+                    if($prod){
+                        $k += 1;
+                    }
                 } else {
                     Product::find($product['id'])->update([
                         'variant_option_one_name' => $product['variant_option_one_name'],
@@ -83,8 +90,11 @@ class UpdateProducts implements ShouldQueue
                         'variant_option_three_name' => $product['variant_option_three_name'],
                         'variant_option_three_value' => $product['variant_option_three_value']
                     ]);
+                    $k += 1;
                 }
             }
+            Log::info('Already Inserted ' . $k . ' products');
         }
+        Log::info('Already Done with ' . $nb_pages . ' pages');
     }
 }

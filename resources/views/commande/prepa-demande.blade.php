@@ -90,7 +90,10 @@
                                     <td scope="row" v-else>
 
                                         <span class="tw-flex tw-items-center tw-justify-between">
-                                            <span v-if="! produit.editing && produit.handle && produit.handle.translation">
+                                            <span v-if="! produit.editing && produit.handle">
+                                                <span v-if="produit.handle.translation">
+                                                    @{{ produit.handle.translation }}
+                                                </span>
                                                 @{{ produit.handle.translation }}
                                                 <span v-if="produit.handle.display1">/ @{{
                                                     produit[produit.handle.display1] }}</span>

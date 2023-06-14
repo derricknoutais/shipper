@@ -177,7 +177,8 @@ class BonCommandeController extends Controller
             ]);
         }
 
-        return $sectionnable;
+        // return $sectionnable;
+        return 1;
     }
 
     public function addSectionnable(BonCommande $bc, Request $request)

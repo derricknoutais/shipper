@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 
@@ -9,6 +10,11 @@ class Commande extends Model
 {
     use LogsActivity;
     protected $guarded = [];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults();
+    }
 
     public function products()
     {
@@ -41,7 +47,8 @@ class Commande extends Model
     {
         return $this->hasMany('App\Facture');
     }
-    public function total(){
+    public function total()
+    {
         // $total = 0;
         // $this->loadMissing('bonsCommandes');
         // if($this->bons_commandes){
@@ -56,5 +63,4 @@ class Commande extends Model
 
         // return $total;
     }
-
 }

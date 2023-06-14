@@ -35,6 +35,29 @@ export default {
 
     },
     methods : {
+        addNewProduct(){
+            axios.post('/bon-commande/' + this.bc_prop.id + '/add-sectionnable', this.newProduct).then(
+                response => {
+                    console.log(response.data)
+                }
+            )
+        },
+        createInvoice(){
+            axios.get('/bon-commande/' + this.bc.id + '/create-invoice').then(response => {
+                console.log(response.data);
+                this.bc.facture_id = response.data
+            }).catch(error => {
+                console.log(error);
+            });
+        },
+        creerBonLivraison(){
+            axios.post('/creer-bl/', this.bc ).then(response => {
+                console.log(response.data);
+
+            }).catch(error => {
+                console.log(error);
+            });
+        },
         convertToXaf(sectionnable, index){
             this.$refs['prix_achat_xaf_' + index ][0].value = sectionnable.pivot.prix_achat * this.commande.currency_exchange_rate
             this.$forceUpdate()
@@ -43,53 +66,6 @@ export default {
             console.log(this.$refs['prix_achat_xaf_' + index ][0].value)
             sectionnable.pivot.prix_achat = this.$refs['prix_achat_xaf_' + index ][0].value / this.commande.currency_exchange_rate;
             this.$$forceUpdate
-        },
-
-        Edited(sectionnable){
-            sectionnable.edited = true
-        },
-        toggleEditMode(){
-            this.editMode = ! this.editMode
-        },
-        updateAllEdited(){
-
-            axios.put('/bon-commande/sectionnables', ['hi', 'hello', 'bjr'] ).then(response => {
-                console.log(response)
-                // this.$swal({
-                //     position: 'top-end',
-                //     icon: 'success',
-                //     title:  'Votre produit a été modifié avec succès',
-                //     showConfirmButton: false,
-                //     timer: 1000
-                // })
-            }).catch(error => {
-                console.log(error);
-            });
-        },
-        enableSectionnableEditMode(sectionnable, index){
-            this.$refs['prix_achat_xaf_' + index ][0].value = (sectionnable.pivot.prix_achat * this.commande.currency_exchange_rate).toFixed(0)
-            sectionnable.editMode = true;
-            this.$forceUpdate()
-        },
-        formatToPrice(value) {
-          return `AED ${value.toFixed(0)}`;
-        },
-        updateSectionnable(sectionnable, location){
-            axios.put('/' + location + '/' + sectionnable.pivot.id, sectionnable).then(response => {
-                this.$swal({
-                    position: 'top-end',
-                    width: 300,
-                    height: 300,
-                    icon: 'success',
-                    title:  'Votre produit a été modifié avec succès',
-                    showConfirmButton: false,
-                    timer: 1000
-                })
-                sectionnable.editMode = false;
-                this.$forceUpdate();
-            }).catch(error => {
-                console.log(error);
-            });
         },
         deleteSectionnable(sectionnable, location){
             console.log('hello')
@@ -119,22 +95,54 @@ export default {
                   }
             })
         },
-        createInvoice(){
-            axios.get('/bon-commande/' + this.bc.id + '/create-invoice').then(response => {
-                console.log(response.data);
-                this.bc.facture_id = response.data
+        Edited(sectionnable){
+            sectionnable.edited = true
+        },
+        enableSectionnableEditMode(sectionnable, index){
+            this.$refs['prix_achat_xaf_' + index ][0].value = (sectionnable.pivot.prix_achat * this.commande.currency_exchange_rate).toFixed(0)
+            sectionnable.editMode = true;
+            this.$forceUpdate()
+        },
+        formatToPrice(value) {
+          return `AED ${value.toFixed(0)}`;
+        },
+        toggleEditMode(){
+            this.editMode = ! this.editMode
+        },
+        updateAllEdited(){
+
+            axios.put('/bon-commande/sectionnables', ['hi', 'hello', 'bjr'] ).then(response => {
+                console.log(response)
+                // this.$swal({
+                //     position: 'top-end',
+                //     icon: 'success',
+                //     title:  'Votre produit a été modifié avec succès',
+                //     showConfirmButton: false,
+                //     timer: 1000
+                // })
             }).catch(error => {
                 console.log(error);
             });
         },
-        creerBonLivraison(){
-            axios.post('/creer-bl/', this.bc ).then(response => {
-                console.log(response.data);
-
+        updateSectionnable(sectionnable, location){
+            axios.put('/' + location + '/' + sectionnable.pivot.id, sectionnable).then(response => {
+                this.$swal({
+                    position: 'top-end',
+                    width: 300,
+                    height: 300,
+                    icon: 'success',
+                    title:  'Votre produit a été modifié avec succès',
+                    showConfirmButton: false,
+                    timer: 1000
+                })
+                sectionnable.editMode = false;
+                this.$forceUpdate();
             }).catch(error => {
                 console.log(error);
             });
-        }
+        },
+        
+        
     },
     created(){
         this.bc = this.bc_prop
@@ -144,19 +152,15 @@ export default {
         })
 
         this.bc.sectionnables.forEach( sect => {
-            // console.log('hello')
             if(sect.sectionnable_type === "App\\Article" ){
                 console.log('hello')
                 axios.get('https://azimuts.gq/article/api/' + sect.sectionnable_id ).then(response => {
-
                     sect.article = response.data
                     this.$forceUpdate()
                 }).catch( error => {
                     console.log(error);
                 });
             }
-
-
 
         });
     }

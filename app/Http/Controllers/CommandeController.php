@@ -17,16 +17,19 @@ use Illuminate\Support\Facades\Redis;
 use Maatwebsite\Excel\Facades\Excel;
 
 
+
 class CommandeController extends Controller
 {
-    public function index(){
+    public function index()
+    {
         // return 1;
         // $commandes = Commande::with('sections', 'sections.products', 'sections.articles', 'demandes', 'demandes.sectionnables', 'bonsCommandes', 'bonsCommandes.sectionnables', 'factures')->get();
         $commandes = Commande::with('sections', 'sections.products', 'sections.articles', 'bonsCommandes', 'bonsCommandes.sectionnables',)->get();
         return view('commande.index', compact('commandes'));
     }
 
-    public function show(Commande $commande){
+    public function show(Commande $commande)
+    {
 
         $commande->loadMissing('products', 'templates', 'templates.products', 'sections', 'sections.sectionnables', 'sections.sectionnables.product', 'sections.sectionnables.article', 'sections.sectionnables.bon_commande',  'sections.products', 'demandes', 'demandes.sectionnables', 'bonsCommandes', 'bonsCommandes.sectionnables', 'factures');
 
@@ -34,7 +37,7 @@ class CommandeController extends Controller
         $id_articles = Sectionnable::where(['sectionnable_type' => 'App\Article'])->whereIn('section_id', $sections)->get();
 
 
-        if($pull = Redis::get('pulldb_products')){
+        if ($pull = Redis::get('pulldb_products')) {
             $products = $pull;
         } else {
             $products = Product::all();
@@ -42,22 +45,23 @@ class CommandeController extends Controller
 
         $templates = Template::with('products')->get();
         $commandes = Commande::all();
-        foreach($commande->sections as $section){
-
+        foreach ($commande->sections as $section) {
         }
-        return view('commande.show', compact('commande', 'products','templates', 'id_articles', 'commandes' ));
+        return view('commande.show', compact('commande', 'products', 'templates', 'id_articles', 'commandes'));
     }
 
-    public function store(Request $request){
+    public function store(Request $request)
+    {
         $commande = Commande::create([
             'name' => $request->name
         ]);
 
-        if($commande)
+        if ($commande)
             return redirect()->back();
     }
 
-    public function updateTraduction(Request $request){
+    public function updateTraduction(Request $request)
+    {
         DB::table('sectionnables')->where('id', $request['pivot']['id'])->update([
             'traduction' => $request['pivot']['traduction']
         ]);
@@ -68,7 +72,8 @@ class CommandeController extends Controller
         return Excel::download(new CommandeExport($commande->id), $commande->name . '.xlsx');
     }
 
-    public function addProduct( Request $request ){
+    public function addProduct(Request $request)
+    {
         DB::table('commandables')->insert([
             'commande_id' => $request['commande_id'],
             'commandable_id' => $request['product_id'],
@@ -77,7 +82,8 @@ class CommandeController extends Controller
         return 'OK';
     }
 
-    public function addTemplate( Request $request ){
+    public function addTemplate(Request $request)
+    {
 
         $template = Template::find($request->template_id)->with('products')->first();
 
@@ -97,7 +103,8 @@ class CommandeController extends Controller
         return 'OK';
     }
 
-    public function consignment(){
+    public function consignment()
+    {
         $client = new Client();
         $headers = [
             "Authorization" => "Bearer CjOC4V9CKof2GyEEdPE0Y_E4t742kylC76bxK7oX",
@@ -111,7 +118,7 @@ class CommandeController extends Controller
         $products = array();
 
         foreach ($data['consignments'] as $consignment) {
-            if($consignment['type'] == 'SUPPLIER' && $consignment['status'] == 'OPEN'){
+            if ($consignment['type'] == 'SUPPLIER' && $consignment['status'] == 'OPEN') {
                 array_push($consignments, $consignment);
             }
         }
@@ -125,7 +132,8 @@ class CommandeController extends Controller
 
     }
 
-    public function addReorderPoint( Request $request){
+    public function addReorderPoint(Request $request)
+    {
         $client = new Client();
         $headers = [
             "Authorization" => "Bearer CjOC4V9CKof2GyEEdPE0Y_E4t742kylC76bxK7oX",
@@ -153,7 +161,7 @@ class CommandeController extends Controller
 
         // Envoie les produits commandés dans l'array consignments
         foreach ($data2['consignments'] as $consignment) {
-            if($consignment['type'] == 'SUPPLIER' && $consignment['status'] == 'OPEN'){
+            if ($consignment['type'] == 'SUPPLIER' && $consignment['status'] == 'OPEN') {
                 array_push($consignments, $consignment);
             }
         }
@@ -171,8 +179,8 @@ class CommandeController extends Controller
         $produx = Product::pluck('id')->toArray();
 
         // Filtre de tous les produits ceux qui sont en dessous ou égal du reorder-point
-        $productsToPush = array_filter($data['data'], function($stock){
-            if(isset($stock['inventory_level']) && isset($stock['reorder_point'])){
+        $productsToPush = array_filter($data['data'], function ($stock) {
+            if (isset($stock['inventory_level']) && isset($stock['reorder_point'])) {
                 return $stock['inventory_level'] <= $stock['reorder_point'];
             }
         });
@@ -182,7 +190,7 @@ class CommandeController extends Controller
         $ptp = array_column($productsToPush, 'product_id');
         $poc = array_column($productsOfConsignments, 'product_id');
 
-        $lowStock = array_uintersect($ptp, $produx, function($a, $b){
+        $lowStock = array_uintersect($ptp, $produx, function ($a, $b) {
             if ($a === $b) {
                 return 0;
             }
@@ -194,7 +202,7 @@ class CommandeController extends Controller
 
         $final = array();
         $lowStock2 = array();
-        foreach($lowStock as $key => $value){
+        foreach ($lowStock as $key => $value) {
             array_push($lowStock2, $value);
         }
         // return $lowStock2;
@@ -204,15 +212,17 @@ class CommandeController extends Controller
         // Compare reorderpoints avec produits commandés
         foreach ($lowStock2 as $stock) {
             $found = false;
-            foreach( $poc as $product){
-                if($product == $stock){
+            foreach ($poc as $product) {
+                if ($product == $stock) {
                     $found = true;
                     break;
                 }
             }
-            if(! $found && $stock != '06bf537b-c771-11e7-ff13-0d97b30d0d02' && $stock != '06bf537b-c771-11e7-ff13-0d97801203a8'
-                && $stock != '06bf537b-c771-11e7-ff13-09b53ed39106' && $stock != '06bf537b-c771-11e6-ff13-fb60295d812c'){
-                array_push($pushMe , [
+            if (
+                !$found && $stock != '06bf537b-c771-11e7-ff13-0d97b30d0d02' && $stock != '06bf537b-c771-11e7-ff13-0d97801203a8'
+                && $stock != '06bf537b-c771-11e7-ff13-09b53ed39106' && $stock != '06bf537b-c771-11e6-ff13-fb60295d812c'
+            ) {
+                array_push($pushMe, [
                     'commande_id' => 2,
                     'product_id' => $stock,
                     'section' => 'Reorder Point',
@@ -235,8 +245,8 @@ class CommandeController extends Controller
         // return $request->templates;
         $ids = array();
         $updates = array();
-        foreach($request->products as $product){
-            if(isset($product['quantity'])){
+        foreach ($request->products as $product) {
+            if (isset($product['quantity'])) {
                 DB::table('commande_product')->where('id', $product['pivot']['id'])->update([
                     'quantity' => $product['quantity']
                 ]);
@@ -244,8 +254,8 @@ class CommandeController extends Controller
         }
 
         foreach ($request->templates as $template) {
-            foreach($template['products'] as $product){
-                if(isset($product['quantity'])){
+            foreach ($template['products'] as $product) {
+                if (isset($product['quantity'])) {
                     DB::table('commande_product')->where('product_id', $product['id'])->update([
                         'quantity' => $product['quantity']
                     ]);
@@ -253,5 +263,4 @@ class CommandeController extends Controller
             }
         }
     }
-
 }

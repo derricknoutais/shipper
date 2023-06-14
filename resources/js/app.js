@@ -1,6 +1,7 @@
 require('./bootstrap');
 
-window.Vue = require('vue');
+import Vue from "vue"
+
 import Multiselect from 'vue-multiselect'
 import VueCurrencyFilter from 'vue-currency-filter'
 import VueSweetalert2 from "vue-sweetalert2";

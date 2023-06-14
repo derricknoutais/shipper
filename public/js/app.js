@@ -1879,7 +1879,10 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     addNewProduct: function addNewProduct() {
-      axios.post('/bon-commande/' + this.bc_prop.id + '/add-sectionnable', this.newProduct).then(function (response) {
+      axios.post('/bon-commande/sectionnable', {
+        document: this.bc_prop,
+        product: this.newProduct
+      }).then(function (response) {
         console.log(response.data);
       });
     },

@@ -28,6 +28,9 @@
 
                 <input v-if="newProduct" type="number" v-model.number="newProduct.quantite"
                     class="tw-input tw-ml-5 tw-bg-white tw-h-full" placeholder="Quantité">
+
+                <input v-if="newProduct" type="number" v-model.number="newProduct.prix_achat"
+                    class="tw-input tw-ml-5 tw-bg-white tw-h-full" placeholder="Quantité">
             </div>
             {{-- Boutton Ajouter Nouveau Produit --}}
             <button v-if="! editMode" class="tw-btn tw-inline-block tw-bg-green-800 tw-text-white tw-mt-5 " @click="addNewProduct('bon-commande')">Ajouter Produit</button>

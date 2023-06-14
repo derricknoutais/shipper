@@ -36,7 +36,11 @@ export default {
     },
     methods : {
         addNewProduct(){
-            axios.post('/bon-commande/' + this.bc_prop.id + '/add-sectionnable', this.newProduct).then(
+            axios.post('/bon-commande/sectionnable', 
+            {
+                document : this.bc_prop,
+                product : this.newProduct
+            }).then(
                 response => {
                     console.log(response.data)
                 }

@@ -4,18 +4,18 @@ namespace App\Http\Controllers;
 
 ini_set('max_execution_time', 1800);
 
-use DB;
-use App\BonCommande;
 use App\Demande;
-use App\Commande;
+use App\Facture;
 use App\Product;
 use App\Section;
-use App\Facture;
+use App\Commande;
+use App\BonCommande;
 use App\Sectionnable;
-use App\Exports\BCommandeExport;
 use App\Jobs\GenererBons;
-use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
+use App\Exports\BCommandeExport;
+use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\DB as FacadesDB;
 
 class BonCommandeController extends Controller
@@ -104,12 +104,15 @@ class BonCommandeController extends Controller
 
     public function storeSectionnable(Request $request)
     {
-        //
+        // Recupere tous les sectionnables de la commande
         $sectionnables = Sectionnable::whereIn('section_id', Section::where('commande_id', $request['document']['commande_id'])->pluck('id'))->get()->toArray();
-        $array = array_filter($sectionnables, function ($sectionnable) use ($request) {
+        // Filtre le Sectionnable
+        $found = array_filter($sectionnables, function ($sectionnable) use ($request) {
             return $sectionnable['sectionnable_id'] === $request['product']['id'];
         });
-        if (isset($array)) {
+        $found = [...$found];
+
+        if (isset($found) && sizeof($found) === 0) {
             //
             $section = Section::where(['commande_id' => $request['document']['commande_id'], 'nom' => '***Retard***'])->first();
             //
@@ -129,7 +132,7 @@ class BonCommandeController extends Controller
                     'sectionnable_id' => $sectionnable->id,
                     'bon_commande_id' => $request['document']['id'],
                     'quantite' => $request['product']['quantite'],
-                    'prix_achat' => 0,
+                    'prix_achat' => $request['product']['prix_achat'],
                     'created_at' => now(),
                     'updated_at' => now()
                 ]);
@@ -160,12 +163,15 @@ class BonCommandeController extends Controller
                     'updated_at' => now()
                 ]);
             }
-        } else {
+        }
+
+        if (isset($found) && sizeof($found) >= 1) {
+            // $found = $found[0];
             DB::table('bon_commande_sectionnable')->insert([
-                'sectionnable_id' => $array['sectionnable_id'],
+                'sectionnable_id' => $found[0]['id'],
                 'bon_commande_id' => $request['document']['id'],
                 'quantite' => $request['product']['quantite'],
-                'prix_achat' => $array['offre'],
+                'prix_achat' => $request['product']['prix_achat'],
                 'created_at' => now(),
                 'updated_at' => now()
             ]);
@@ -176,7 +182,7 @@ class BonCommandeController extends Controller
 
     public function addSectionnable(BonCommande $bc, Request $request)
     {
-        // return $request->all();
+        return $request->all();
 
         DB::table('bon_commande_sectionnable')->insert([
             'bon_commande_id' => $bc->id,

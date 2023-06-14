@@ -136,6 +136,7 @@ class BonCommandeController extends Controller
                     'created_at' => now(),
                     'updated_at' => now()
                 ]);
+                return $sectionnable;
             } else {
                 $section = Section::create([
                     'commande_id' => $request['document']['commande_id'],
@@ -163,6 +164,7 @@ class BonCommandeController extends Controller
                     'updated_at' => now()
                 ]);
             }
+            return $sectionnable;
         }
 
         if (isset($found) && sizeof($found) >= 1) {
@@ -175,10 +177,8 @@ class BonCommandeController extends Controller
                 'created_at' => now(),
                 'updated_at' => now()
             ]);
+            return $found[0];
         }
-
-        // return $sectionnable;
-        return 1;
     }
 
     public function addSectionnable(BonCommande $bc, Request $request)

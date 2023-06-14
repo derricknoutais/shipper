@@ -1860,7 +1860,7 @@ __webpack_require__.r(__webpack_exports__);
     montantTotal: function montantTotal() {
       var total = 0;
       this.bc.sectionnables.forEach(function (sect) {
-        total += sect.pivot.quantite * sect.pivot.prix_achat;
+        total += sect.quantite * sect.prix_achat;
       });
       return total;
     },
@@ -1879,18 +1879,26 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     addNewProduct: function addNewProduct() {
+      var _this = this;
       axios.post('/bon-commande/sectionnable', {
         document: this.bc_prop,
         product: this.newProduct
       }).then(function (response) {
         console.log(response.data);
+        _this.bc.sectionnables.push(response.data);
+        _this.$forceUpdate();
+        _this.$swal({
+          icon: 'success',
+          title: 'Succès',
+          text: 'Votre produit a été ajouté avec suuccès'
+        });
       });
     },
     createInvoice: function createInvoice() {
-      var _this = this;
+      var _this2 = this;
       axios.get('/bon-commande/' + this.bc.id + '/create-invoice').then(function (response) {
         console.log(response.data);
-        _this.bc.facture_id = response.data;
+        _this2.bc.facture_id = response.data;
       })["catch"](function (error) {
         console.log(error);
       });
@@ -1912,7 +1920,7 @@ __webpack_require__.r(__webpack_exports__);
       this.$$forceUpdate;
     },
     deleteSectionnable: function deleteSectionnable(sectionnable, location) {
-      var _this2 = this;
+      var _this3 = this;
       console.log('hello');
       this.$swal({
         title: 'Êtes-vous sûr(e)?',
@@ -1926,7 +1934,7 @@ __webpack_require__.r(__webpack_exports__);
       }).then(function (result) {
         if (result.value) {
           axios["delete"]('/' + location + '/sectionnable/' + sectionnable.pivot.id).then(function (response) {
-            _this2.$swal('Deleted!', 'Your file has been deleted.', 'success');
+            _this3.$swal('Deleted!', 'Your file has been deleted.', 'success');
             console.log(response.data);
           })["catch"](function (error) {
             console.log(error);
@@ -1963,9 +1971,9 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     updateSectionnable: function updateSectionnable(sectionnable, location) {
-      var _this3 = this;
+      var _this4 = this;
       axios.put('/' + location + '/' + sectionnable.pivot.id, sectionnable).then(function (response) {
-        _this3.$swal({
+        _this4.$swal({
           position: 'top-end',
           width: 300,
           height: 300,
@@ -1975,14 +1983,14 @@ __webpack_require__.r(__webpack_exports__);
           timer: 1000
         });
         sectionnable.editMode = false;
-        _this3.$forceUpdate();
+        _this4.$forceUpdate();
       })["catch"](function (error) {
         console.log(error);
       });
     }
   },
   created: function created() {
-    var _this4 = this;
+    var _this5 = this;
     this.bc = this.bc_prop;
     this.bc.sectionnables.map(function (sectionnable) {
       sectionnable.editMode = false;
@@ -1993,7 +2001,7 @@ __webpack_require__.r(__webpack_exports__);
         console.log('hello');
         axios.get('https://azimuts.gq/article/api/' + sect.sectionnable_id).then(function (response) {
           sect.article = response.data;
-          _this4.$forceUpdate();
+          _this5.$forceUpdate();
         })["catch"](function (error) {
           console.log(error);
         });

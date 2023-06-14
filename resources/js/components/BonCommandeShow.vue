@@ -16,7 +16,7 @@ export default {
         montantTotal(){
             var total = 0
             this.bc.sectionnables.forEach( sect => {
-                total += (sect.pivot.quantite * sect.pivot.prix_achat)
+                total += (sect.quantite * sect.prix_achat)
             })
             return total
         },
@@ -42,7 +42,15 @@ export default {
                 product : this.newProduct
             }).then(
                 response => {
-                    console.log(response.data)
+                    console.log(response.data);
+                    this.bc.sectionnables.push(response.data)
+                    this.$forceUpdate()
+                    this.$swal({
+                            icon: 'success',
+                            title: 'Succès',
+                            text: 'Votre produit a été ajouté avec suuccès'
+                        })
+
                 }
             )
         },

@@ -26,11 +26,15 @@
                 <multiselect class="tw-cursor-text" v-model="newProduct" :options="{{ $products }}" :searchable="true"
                     :close-on-select="true" :show-labels="false" placeholder="Pick a value" label="name"></multiselect>
 
-                <input v-if="newProduct" type="number" v-model.number="newProduct.quantite"
-                    class="tw-input tw-ml-5 tw-bg-white tw-h-full" placeholder="Quantité">
+                <div>
+                    <input v-if="newProduct" type="number" v-model.number="newProduct.quantite"
+                    class="tw-input tw-ml-5 tw-bg-white tw-h-full" placeholder="Quantité" >
+                </div>
+                
+                    
 
                 <input v-if="newProduct" type="number" v-model.number="newProduct.prix_achat"
-                    class="tw-input tw-ml-5 tw-bg-white tw-h-full" placeholder="Quantité">
+                    class="tw-input tw-ml-5 tw-bg-white tw-h-full" placeholder="Prix Achat (AED)">
             </div>
             {{-- Boutton Ajouter Nouveau Produit --}}
             <button v-if="! editMode" class="tw-btn tw-inline-block tw-bg-green-800 tw-text-white tw-mt-5 " @click="addNewProduct('bon-commande')">Ajouter Produit</button>

@@ -27,13 +27,17 @@ use Illuminate\Support\Facades\Route;
 use App\Jobs\InsertPulledProductsToDatabase;
 use App\Jobs\PullProductsFromPullDBIntoRedis;
 
+header('Access-Control-Allow-Origin:  *');
+header('Access-Control-Allow-Methods:  POST, GET, OPTIONS, PUT, DELETE');
+header('Access-Control-Allow-Headers:  X-CSRF-TOKEN, X-Requested-With, Content-Type, X-Auth-Token, Origin, Authorization');
+
 if (env('APP_ENV') === 'local') {
     Auth::loginUsingId(1);
 }
 
 Route::get('/section/{section_id}', function ($section_id) {
-        return Sectionnable::where('section_id', $section_id)->count();
-    });
+    return Sectionnable::where('section_id', $section_id)->count();
+});
 
 // Welcome
 Route::get('/', function () {
@@ -55,10 +59,7 @@ Route::get('/prods', function () {
 });
 
 Route::get('/test', function () {
-    // return Product::find('4e63b8aa-852d-4cdd-ae8c-767dfe3658b5');
-    return Sectionnable::where('sectionnable_id', '4e63b8aa-852d-4cdd-ae8c-767dfe3658b5')
-        ->with('product')
-        ->first();
+    return Http::get('https://pulldb.stapog.com/api/inventory?product_id=023c72a6-e971-11eb-e2fd-5972db603901');
 });
 
 Route::middleware(['auth'])->group(function () {

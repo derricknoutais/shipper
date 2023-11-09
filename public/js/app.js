@@ -2377,8 +2377,8 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
       });
       if (this.sectionnable_type === 'Product') {
         this.selected_element.stock_loading = true;
-        axios.get('/api/stock/' + this.selected_element.id).then(function (response) {
-          _this.selected_element.stock = response.data;
+        axios.get('https://pulldb.stapog.com/api/inventory?product_id=' + this.selected_element.id + '&outlet_id=06bf537b-c77f-11e6-ff13-fb602832ccea').then(function (response) {
+          _this.selected_element.stock = response.data.inventory_level;
           _this.selected_element.stock_loading = false;
           _this.$forceUpdate();
         })["catch"](function (error) {

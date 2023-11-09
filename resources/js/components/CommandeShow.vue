@@ -56,6 +56,11 @@ export default {
     watch: {
         'selected_element': function () {
             document.getElementById('quantiteInput').focus()
+
+
+
+
+
             axios.get('/quantite-vendue/' + this.selected_element.id).then(response => {
                 this.vente = response.data
                 // console.log(response.data);
@@ -88,10 +93,10 @@ export default {
 
             if (this.sectionnable_type === 'Product') {
                 this.selected_element.stock_loading = true;
-                axios.get('/api/stock/' + this.selected_element.id).then(response => {
-                    this.selected_element.stock = response.data
-                    this.selected_element.stock_loading = false
-                    this.$forceUpdate()
+                axios.get('https://pulldb.stapog.com/api/inventory?product_id=' + this.selected_element.id + '&outlet_id=06bf537b-c77f-11e6-ff13-fb602832ccea').then(response => {
+                    this.selected_element.stock = response.data.inventory_level
+                    this.selected_element.stock_loading = false;
+                    this.$forceUpdate();
                 }).catch(error => {
                     this.$swal({
                         icon: 'error',

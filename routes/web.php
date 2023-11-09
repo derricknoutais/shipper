@@ -31,6 +31,10 @@ if (env('APP_ENV') === 'local') {
     Auth::loginUsingId(1);
 }
 
+Route::get('/section/{section_id}', function ($section_id) {
+        return Sectionnable::where('section_id', $section_id)->count();
+    });
+
 // Welcome
 Route::get('/', function () {
     // PullProductsFromPullDBIntoRedis::dispatch();
@@ -460,14 +464,13 @@ Route::middleware(['auth'])->group(function () {
             'Authorization' => 'Bearer ' . env('VEND_TOKEN'),
             'Accept' => 'application/json',
         ];
-        $response = $client->request('GET', 'https://stapog.vendhq.com/api/consignment_product?consignment_id=' . $reorderpoint_id . '&page_size=200', [
+        $response = $client->request('GET', 'https://stapog.vendhq.com/api/2.0/consignments/' . $reorderpoint_id . '/products?page_size=1000', [
             'headers' => $headers,
         ]);
-
         $data = json_decode((string) $response->getBody(), true);
 
         $totaux = [];
-        $totaux['products'] = sizeof($data['consignment_products']);
+        $totaux['products'] = sizeof($data['data']);
         if (!($section = Section::where(['nom' => 'Reorder Point', 'commande_id' => $commande_id])->first())) {
             $section = Section::create([
                 'nom' => 'Reorder Point',
@@ -480,9 +483,10 @@ Route::middleware(['auth'])->group(function () {
         $sections = Section::where('commande_id', $commande_id)
             ->with('sectionnables')
             ->get();
-        foreach ($data['consignment_products'] as $product) {
+        // Pour chaque produit du reorder
+        foreach ($data['data'] as $product) {
             $found = false;
-            // Je dois avoir toutes les sections
+            // Je vérifie que le produit n'est dans aucune section
             foreach ($sections as $section) {
                 foreach ($section->sectionnables as $sectionnable) {
                     if ($sectionnable->sectionnable_id === $product['product_id']) {

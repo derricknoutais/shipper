@@ -55,7 +55,8 @@ Route::get('/tesst', function () {
     // return 1;
 });
 Route::get('/update-products', function () {
-    Bus::batch([new PullProductsFromPullDBIntoRedis(), new InsertPulledProductsToDatabase()])->dispatch();
+    PullProductsFromPullDBIntoRedis::dispatch();
+    InsertPulledProductsToDatabase::dispatch();
 });
 
 Route::get('/test', function () {

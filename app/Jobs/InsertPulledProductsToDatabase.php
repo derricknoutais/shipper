@@ -35,21 +35,15 @@ class InsertPulledProductsToDatabase implements ShouldQueue
         // Recupere les produits recuperes de Vend stockes dans Redis ()
         $prods = json_decode(Redis::get('pulldb_products'), true);
         // Transforme prods en collection
-        $final_prods = collect($prods)->map( function ($item) {
+        $final_prods = collect($prods)->map(function ($item) {
             // Transforme chaque produit en collection pour pouvoir
             $t = collect($item);
             // Trier et Retourner les donnees  ci-dessous
-            return $t->only([
-                'id', 'source_id', 'source_variant_id', 'variant_parent_id', 'name', 'variant_name', 'handle',
-                'sku', 'supplier_code', 'active', 'ecwid_enabled_webstore', 'has_inventory', 'is_composite', 'description',
-                'image_url', 'created_at', 'updated_at', 'deleted_at', 'source', 'account_code', 'account_code_purchase',
-                'supply_price', 'version'
-            ]);
+            return $t->only(['id', 'source_id', 'source_variant_id', 'variant_parent_id', 'name', 'variant_name', 'handle', 'sku', 'supplier_code', 'active', 'ecwid_enabled_webstore', 'has_inventory', 'is_composite', 'description', 'image_url', 'created_at', 'updated_at', 'deleted_at', 'source', 'account_code', 'account_code_purchase', 'supply_price', 'version']);
         });
         // Inserer Final Produits dans Database
-        foreach(array_chunk($final_prods->toArray(), 100) as $chunk){
+        foreach (array_chunk($final_prods->toArray(), 100) as $chunk) {
             DB::table('products')->insertOrIgnore($final_prods->toArray());
         }
-
     }
 }

@@ -348,6 +348,23 @@
                                     <div
                                         class="tw-w-full tw-justify-between tw-mr-4 tw-mt-1 tw-items-center tw-flex tw-bg-gray-200 tw-p-3">
                                         <div class="tw-flex">
+                                            <p class="tw-text-lg tw-mr-4">Vente (Vend) :</p>
+                                            <i class="fas fa-spinner fa-spin"
+                                                v-if="selected_element && selected_element.sales_loading"></i>
+                                            <span v-else>@{{ selected_element.sales }}</span>
+
+                                        </div>
+                                        <div>
+                                            <span class="tw-mx-3">Entre </span>
+                                            <input type="date" v-model="sales_date_apres">
+                                            <span class="tw-mx-3">Et </span>
+                                            <input type="date" v-model="sales_date_avant">
+                                        </div>
+                                    </div>
+                                    {{-- Subzero --}}
+                                    <div
+                                        class="tw-w-full tw-justify-between tw-mr-4 tw-mt-1 tw-items-center tw-flex tw-bg-gray-200 tw-p-3">
+                                        <div class="tw-flex">
                                             <p class="tw-text-lg tw-mr-4">Subzero :</p>
                                             <i class="fas fa-spinner fa-spin"
                                                 v-if="selected_element && selected_element.sub_loading"></i>

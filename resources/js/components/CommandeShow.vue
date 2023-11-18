@@ -3,17 +3,14 @@ export default {
     props: ['commande_prop', 'products_prop', 'templates_prop', 'articles_prop', 'commandes_prop'],
     data() {
         return {
-
             show_products: false,
             selected_product: false,
             selected_template: false,
             selected_element: false,
             reorder_point_id: false,
             dernieres_commandes: false,
-
             sub_date_apres: false,
             sub_date_avant: false,
-
             new_section: '',
             isUpdating: false,
             isDeleting: false,
@@ -30,12 +27,8 @@ export default {
                 article: false
             },
             reorderPoint: null,
-
             articlesApi: [],
-
             articlesFetched: [],
-
-
             products: null,
             templates: null,
             articles: false,
@@ -50,7 +43,6 @@ export default {
             list: false,
             label: '',
             found: false,
-
         }
     },
     watch: {

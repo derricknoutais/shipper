@@ -356,9 +356,9 @@
                                         </div>
                                         <div>
                                             <span class="tw-mx-3">Entre </span>
-                                            <input type="date" v-model="sales_date_apres">
+                                            <input type="date" {{-- v-model="sales_date_apres" --}}>
                                             <span class="tw-mx-3">Et </span>
-                                            <input type="date" v-model="sales_date_avant">
+                                            <input type="date" {{-- v-model="sales_date_avant" --}}>
                                         </div>
                                     </div>
                                     {{-- Subzero --}}

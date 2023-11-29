@@ -2975,7 +2975,7 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
     },
     list_type: function list_type() {
       if (this.sectionnable_type === 'Product') {
-        this.label = 'variant_name';
+        this.label = 'name';
         return this.products;
       } else if (this.sectionnable_type === 'Template') {
         this.label = 'name';

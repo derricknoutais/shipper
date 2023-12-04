@@ -5,7 +5,7 @@
 <p>E-Mail: servicesazimuts@gmail.com</p>
 <p>Address: Rue Fréderic Dioni, Case d'Écoute Port-Gentil</p>
 
-<h1>Bon Commande {{$bonCommande->nom}}</h1>
+<h1>Bon Commande {{ $bonCommande->nom }}</h1>
 <table>
     <thead>
         <tr>
@@ -25,46 +25,46 @@
             <td>Total</td>
         </tr>
         @foreach ($bonCommande->sectionnables as $sectionnable)
-        @if ($sectionnable->sectionnable_type === 'App\\Product')
-        <tr>
-            <td>{{ $sectionnable->pivot->id }}</td>
-            @if($sectionnable->pivot->traduction)
-                <td>{{ $sectionnable->pivot->traduction }}</td>
-            @elseif($sectionnable->traduction)
-                <td>{{ $sectionnable->traduction }}</td>
-            @elseif($sectionnable->product->handle)
-                <td>
-                    {{ $sectionnable->product->handle->translation }}
-                    @if ($sectionnable->product->handle->display1)
-                        <span>/ {{ $sectionnable->product[$sectionnable->product->handle->display1] }}</span>
+            @if ($sectionnable->sectionnable_type === 'App\\Product')
+                <tr>
+                    <td>{{ $sectionnable->pivot->id }}</td>
+                    @if ($sectionnable->pivot->traduction)
+                        <td>{{ $sectionnable->pivot->traduction }}</td>
+                    @elseif($sectionnable->traduction)
+                        <td>{{ $sectionnable->traduction }}</td>
+                    @elseif($sectionnable->product->handle)
+                        <td>
+                            {{ $sectionnable->product->handle->translation }}
+                            @if ($sectionnable->product->handle->display1)
+                                <span>/ {{ $sectionnable->product[$sectionnable->product->handle->display1] }}</span>
+                            @endif
+                            @if ($sectionnable->product->handle->display2)
+                                <span>/ {{ $sectionnable->product[$sectionnable->product->handle->display2] }}</span>
+                            @endif
+                            @if ($sectionnable->product->handle->display3)
+                                <span>/ {{ $sectionnable->product[$sectionnable->product->handle->display3] }}</span>
+                            @endif
+                        </td>
                     @endif
-                    @if ($sectionnable->product->handle->display2)
-                        <span>/ {{ $sectionnable->product[$sectionnable->product->handle->display2] }}</span>
-                    @endif
-                    @if ($sectionnable->product->handle->display3)
-                        <span>/ {{ $sectionnable->product[$sectionnable->product->handle->display3] }}</span>
-                    @endif
-                </td>
-            @endif
-            <td>{{ $sectionnable->pivot->quantite }}</td>
-            <td>{{ $sectionnable->pivot->prix_achat / 165 }}</td>
-            <td>{{ ($sectionnable->pivot->prix_achat /165) * $sectionnable->quantite }}</td>
-        </tr>
-        @else
-        <tr>
-            <td>{{ $sectionnable->pivot->id }}</td>
-            @if ($sectionnable->pivot->traduction)
-                <td>{{ $sectionnable->pivot->traduction }}</td>
-            @elseif($sectionnable->traduction)
-                <td>{{ $sectionnable->traduction }}</td>
+                    <td>{{ $sectionnable->pivot->quantite }}</td>
+                    <td>{{ $sectionnable->pivot->prix_achat }}</td>
+                    <td>{{ $sectionnable->pivot->prix_achat * $sectionnable->quantite }}</td>
+                </tr>
             @else
-                <td>{{ $sectionnable->article->nom }}</td>
+                <tr>
+                    <td>{{ $sectionnable->pivot->id }}</td>
+                    @if ($sectionnable->pivot->traduction)
+                        <td>{{ $sectionnable->pivot->traduction }}</td>
+                    @elseif($sectionnable->traduction)
+                        <td>{{ $sectionnable->traduction }}</td>
+                    @else
+                        <td>{{ $sectionnable->article->nom }}</td>
+                    @endif
+                    <td>{{ $sectionnable->pivot->quantite }}</td>
+                    <td>{{ $sectionnable->pivot->prix_achat }}</td>
+                    <td>{{ $sectionnable->pivot->prix_achat * $sectionnable->quantite }}</td>
+                </tr>
             @endif
-            <td>{{ $sectionnable->pivot->quantite }}</td>
-            <td>{{ ( $sectionnable->pivot->prix_achat / 165 ) }}</td>
-            <td>{{ ( $sectionnable->pivot->prix_achat / 165 ) * $sectionnable->quantite }}</td>
-        </tr>
-        @endif
         @endforeach
         <tr></tr>
     </tbody>

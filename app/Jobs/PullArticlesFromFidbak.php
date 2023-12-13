@@ -8,17 +8,13 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Redis;
 
-class PullProductsFromPullDBIntoRedis implements ShouldQueue
+class PullArticlesFromFidbak implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     /**
      * Create a new job instance.
-     *
-     * @return void
      */
     public function __construct()
     {
@@ -27,14 +23,12 @@ class PullProductsFromPullDBIntoRedis implements ShouldQueue
 
     /**
      * Execute the job.
-     *
-     * @return void
      */
-    public function handle()
+    public function handle(): void
     {
-        $response = Http::timeout(6000)
-            ->get(env('PULLDB_URL') . '/api/products')
+        $articles = Http::timeout(6000)
+            ->get(env('FIDBAK_URL') . '/api/articles')
             ->json();
-        Redis::set('pulled_products', json_encode($response));
+        Redis::set('pulled_articles', json_encode($articles));
     }
 }

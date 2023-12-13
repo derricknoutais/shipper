@@ -4,11 +4,12 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-
 class Product extends Model
 {
     protected $guarded = [];
-    protected $casts = ['id' => 'string'];
+
+    // protected $casts = ['id' => 'string'];
+    public $incrementing = false;
     public $timestamps = false;
 
     public function commandes()
@@ -18,10 +19,10 @@ class Product extends Model
 
     public function fournisseurs()
     {
-        return $this->belongsToMany('App\Fournisseur', 'product_fournisseur');
+        return $this->belongsToMany('App\Fournisseur', 'product_fournisseur', 'product_id', 'fournisseur_id');
     }
     public function handle()
     {
-        return $this->belongsTo('App\Handle');
+        return $this->belongsTo('App\Handle', 'handle', 'name');
     }
 }

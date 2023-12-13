@@ -9,20 +9,21 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
 class Kernel extends ConsoleKernel
 {
-
-    protected $commands = [
-
-    ];
+    protected $commands = [];
 
     protected function schedule(Schedule $schedule)
     {
-        $schedule->call( new PullProductsFromPullDBIntoRedis )->dailyAt('00:10');
-        $schedule->call( new InsertPulledProductsToDatabase )->dailyAt('00:18');
+        $schedule
+            ->call(function () {
+                PullProductsFromPullDBIntoRedis::dispatch();
+                InsertPulledProductsToDatabase::dispatch();
+            })
+            ->everyTenMinutes();
     }
 
     protected function commands()
     {
-        $this->load(__DIR__.'/Commands');
+        $this->load(__DIR__ . '/Commands');
 
         require base_path('routes/console.php');
     }

@@ -44,13 +44,15 @@
                     {{-- Sections --}}
                     <div class="tw-bg-gray-300 tw-px-32" v-for="section in commande.sections"
                         v-show="filtered.sections.length <= 0">
-
                         <div class="tw-flex tw-items-center tw-mt-24 tw-cursor-pointer" @click="toggleSection(section)">
                             <i class="fas fa-chevron-down" v-if="section.show"></i>
                             <i class="fas fa-chevron-right" v-else></i>
-                            <h4 class="tw-text-2xl tw-ml-4 tw-font-thin tw-tracking-wide">@{{ section.nom }} [ <span
-                                    class="tw-text-blue-500">@{{ niveauDAchevement(section, 'niveau') }}</span> <span
-                                    class="tw-text-red-500">@{{ niveauDAchevement(section, 'pourcentage') }}%</span> ]</h4>
+                            <h4 class="tw-text-2xl tw-ml-4 tw-font-thin tw-tracking-wide">
+                                @{{ section.nom }} [
+                                <span class="tw-text-blue-500">@{{ niveauDAchevement(section, 'niveau') }}</span>
+                                <span class="tw-text-red-500">@{{ niveauDAchevement(section, 'pourcentage') }}%</span>
+                                ]
+                            </h4>
                         </div>
 
                         <table class="table" v-show="section.show">
@@ -85,7 +87,7 @@
                                                 @{{ produit.id }}
                                             </a>
                                         </td>
-                                        <td>@{{ produit.name }}</td>
+                                        <td>@{{ produit.variant_name }}</td>
                                         <td v-if="produit.pivot.traduction">
                                             <span class="tw-flex tw-items-center tw-justify-between">
                                                 <span class="tw-w-full">
@@ -113,7 +115,6 @@
                                                     <span v-if="produit.handle.translation">
                                                         @{{ produit.handle.translation }}
                                                     </span>
-                                                    @{{ produit.handle.translation }}
                                                     <span v-if="produit.handle.display1">/ @{{ produit[produit.handle.display1] }}</span>
                                                     <span v-if="produit.handle.display2">/ @{{ produit[produit.handle.display2] }}</span>
                                                     <span v-if="produit.handle.display3">/ @{{ produit[produit.handle.display3] }}</span>

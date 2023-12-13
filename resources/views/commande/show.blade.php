@@ -418,13 +418,16 @@
                                         <tbody is="transition-group"
                                             enter-active-class="animate__animated animate__fadeInUp"
                                             leave-active-class="animate__animated animate__fadeOutDown">
-                                            <tr v-for="(sectionnable) in section.sectionnables"
+                                            <tr v-for="(sectionnable, index) in section.sectionnables"
                                                 v-if="sectionnable.sectionnable_type === 'App\\Product' "
                                                 :key="sectionnable.id">
                                                 <td scope="row">
                                                     <a :href="'https://stapog.com/fiche-renseignement/' + sectionnable
                                                         .fiche_renseignement_id"
-                                                        v-if="sectionnable.product">@{{ sectionnable.product.name }}</a>
+                                                        v-if="sectionnable.product">@{{ sectionnable.product.variant_name }}</a>
+                                                    <a :href="'https://stapog.com/fiche-renseignement/' + sectionnable
+                                                        .fiche_renseignement_id"
+                                                        v-else>@{{ section.products[index].variant_name }}</a>
                                                 </td>
                                                 <td>
                                                     <div class="form-group">

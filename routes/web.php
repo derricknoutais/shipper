@@ -3,6 +3,7 @@
 // use DB;
 use App\Sales;
 use App\Handle;
+use App\Article;
 use App\Demande;
 use App\Facture;
 use App\Product;
@@ -60,7 +61,14 @@ Route::get('/update-products', function () {
 });
 
 Route::get('/test', function () {
-    return Http::get('https://pulldb.stapog.com/api/inventory?product_id=023c72a6-e971-11eb-e2fd-5972db603901');
+    $articles = Http::timeout(6000)
+        ->get(env('FIDBAK_URL') . '/api/articles')
+        ->json();
+    Redis::set('pulled_articles', json_encode($articles));
+    Article::all()->map->delete();
+    foreach (array_chunk($articles, 1000) as $chunk) {
+        DB::table('articles')->insert($chunk);
+    }
 });
 
 Route::middleware(['auth'])->group(function () {
@@ -142,6 +150,7 @@ Route::middleware(['auth'])->group(function () {
             'currency_exchange_rate' => $request['rate'],
         ]);
     });
+
     /**
      ************* SECTION ***************
      * Chaque commande a plusieurs sections
@@ -392,8 +401,6 @@ Route::middleware(['auth'])->group(function () {
         $produits = App\Product::where('handle', 'PlateauDembrayageAisin')->get();
         return view('work', compact('produits'));
     });
-
-    // /section-product/delete/' + article.id + '/' + section.id
 
     Route::put('article-update', function (Request $request) {
         // return $request->all();
@@ -751,7 +758,6 @@ Route::middleware(['auth'])->group(function () {
             }
         }
     });
-
     Route::get('/api/stocktake', function () {
         $client = new Client();
         $headers = [
@@ -780,7 +786,6 @@ Route::middleware(['auth'])->group(function () {
         }
         return 'Ok';
     });
-
     Route::get('/api/stocktake/products', function () {
         $client = new Client();
         $headers = [
@@ -810,35 +815,6 @@ Route::middleware(['auth'])->group(function () {
         }
         return 'Ok';
     });
-
-    // Route::get('/api/stock', function () {
-    //     $client = new Client();
-    //     $headers = [
-    //         "Authorization" => "Bearer " . env('VEND_TOKEN'),
-    //         'Accept'        => 'application/json',
-    //     ];
-    //     for ($j = 1; $j <= 17; $j++) {
-
-    //         $response = $client->request('GET', 'https://stapog.vendhq.com/api/2.0/products?page_size=200', ['headers' => $headers]);
-    //         $data = json_decode((string) $response->getBody(), true);
-    //         return $data['data'];
-    //     }
-    //     foreach ($products as $product) {
-    //         if (!Product::find($product['id'])) {
-
-    //             Product::create([
-    //                 'id' => $product['id'],
-    //                 'handle' => $product['handle'],
-    //                 'name' => $product['name'],
-    //                 'sku' => $product['sku'],
-    //                 'price' => $product['price'],
-    //                 'supply_price' => $product['supply_price']
-    //             ]);
-    //         }
-    //     }
-
-    //     // return $totalProducts;
-    // });
     Route::get('/api/products', function () {
         $client = new Client();
         $headers = [

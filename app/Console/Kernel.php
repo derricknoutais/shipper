@@ -26,7 +26,7 @@ class Kernel extends ConsoleKernel
             ->call(function () {
                 Log::info("I'm running");
             })
-            ->everyFiveMinutes();
+            ->everyMinute();
     }
 
     protected function commands()

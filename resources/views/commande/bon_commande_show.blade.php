@@ -130,7 +130,7 @@
                         </td>
                     </tr>
                     {{-- Articles --}}
-                    <tr v-for="sectionnable in bc.sectionnables" v-if="sectionnable.article">
+                    <tr v-for="(sectionnable, index) in bc.sectionnables" v-if="sectionnable.article">
                         {{-- Index --}}
                         <td>@{{ index + 1 }}</td>
                         <td scope="row" class="tw-bg-gray-300 tw-border tw-border-gray-400">

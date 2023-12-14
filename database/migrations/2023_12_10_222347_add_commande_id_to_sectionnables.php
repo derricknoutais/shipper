@@ -11,7 +11,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('sectionnables', function (Blueprint $table) {
-            $table->bigInteger('commande_id')->nullable();
+            $table->bigInteger('commande_id');
             $table
                 ->foreign('commande_id')
                 ->references('id')

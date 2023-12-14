@@ -95,7 +95,7 @@
                         <td class=" tw-bg-indigo-600 tw-text-white">
                             <input v-show="editMode || sectionnable.editMode" {{-- @input="addEdited(sectionnable)" --}}
                                 class="tw-input focus:tw-border-gray-600 tw-text-black" type="number"
-                                @keyup="convertToAed(sectionnable, index)" :ref="'prix_achat_xaf_' + index">
+                                @keyup="convertToAed(sectionnable, key)" :ref="'prix_achat_xaf_' + key">
                             <span
                                 v-if="! (editMode || sectionnable.editMode) && (sectionnable.pivot.prix_achat % commande.currency_exchange_rate !== 0 )">XAF
                                 @{{ (sectionnable.pivot.prix_achat * commande.currency_exchange_rate).toFixed(1) }}</span>
@@ -113,7 +113,7 @@
                             {{-- Edit Mode --}}
                             <i v-if="! sectionnable.editMode && !editMode "
                                 class="fas fa-edit tw-text-blue-700 tw-cursor-pointer"
-                                @click="enableSectionnableEditMode(sectionnable, index)">
+                                @click="enableSectionnableEditMode(sectionnable, key)">
                             </i>
 
                             {{-- Enregistrer --}}

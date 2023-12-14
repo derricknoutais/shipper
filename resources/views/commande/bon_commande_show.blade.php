@@ -59,9 +59,9 @@
                 </thead>
                 <tbody>
                     {{-- Produits --}}
-                    <tr v-for="(sectionnable, key, index) in bc.sectionnables" v-if="sectionnable.product">
+                    <tr v-for="(sectionnable, key) in bc.sectionnables" v-if="sectionnable.product">
                         {{-- Index --}}
-                        <td>@{{ index }}</td>
+                        {{-- <td>@{{ index }}</td> --}}
 
                         {{-- Nom du Produit --}}
                         <td class="tw-bg-gray-300 tw-border tw-border-gray-400" scope="row">@{{ sectionnable.product.variant_name }} </td>
@@ -130,7 +130,7 @@
                         </td>
                     </tr>
                     {{-- Articles --}}
-                    <tr v-for="(sectionnable, key, index) in bc.sectionnables" v-if="sectionnable.article">
+                    <tr v-for="(sectionnable, key) in bc.sectionnables" v-if="sectionnable.article">
                         {{-- Index --}}
                         {{-- <td>@{{ index }}</td> --}}
                         <td scope="row" class="tw-bg-gray-300 tw-border tw-border-gray-400">

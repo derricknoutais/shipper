@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use Illuminate\Support\Facades\Log;
 use Illuminate\Console\Scheduling\Schedule;
 use App\Jobs\InsertPulledProductsToDatabase;
 use App\Jobs\PullProductsFromPullDBIntoRedis;

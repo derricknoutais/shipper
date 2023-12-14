@@ -12,12 +12,12 @@ return new class extends Migration {
     {
         Schema::table('sectionnables', function (Blueprint $table) {
             $table->bigInteger('commande_id');
-            $table
-                ->foreign('commande_id')
-                ->references('id')
-                ->on('commandes')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
+            // $table
+            //     ->foreign('commande_id')
+            //     ->references('id')
+            //     ->on('commandes')
+            //     ->onDelete('cascade')
+            //     ->onUpdate('cascade');
         });
     }
 

@@ -131,6 +131,8 @@
                     </tr>
                     {{-- Articles --}}
                     <tr v-for="sectionnable in bc.sectionnables" v-if="sectionnable.article">
+                        {{-- Index --}}
+                        <td>@{{ index + 1 }}</td>
                         <td scope="row" class="tw-bg-gray-300 tw-border tw-border-gray-400">
                             @{{ sectionnable.article.nom }}
                         </td>
@@ -141,12 +143,11 @@
                         <td class="tw-bg-teal-700 tw-text-white">AED @{{ sectionnable.pivot.prix_achat * sectionnable.pivot.quantite }}</td>
                         <td class=" tw-bg-indigo-600 tw-text-white">XAF @{{ sectionnable.pivot.prix_achat * commande.currency_exchange_rate }}</td>
                         <td class=" tw-bg-indigo-700 tw-text-white">
-                            XAF @{{ sectionnable.pivot.quantite * (sectionnable.pivot.prix_achat / commande
-    .currency_exchange_rate) }}
-                            {{-- <animated-number
+                            XAF
+                            <animated-number
                                 :value="sectionnable.pivot.quantite * (sectionnable.pivot.prix_achat / commande
                                     .currency_exchange_rate)"
-                                :duration="500" /> --}}
+                                :duration="500" />
                         </td>
                         <td class="tw-bg-gray-200">
                             {{-- Edit Mode --}}
@@ -168,16 +169,13 @@
                         <td colspan="2"></td>
                         <td scope="row"class="tw-text-right tw-bg-teal-600 tw-text-teal-100">MONTANT TOTAL</td>
                         <td class="tw-bg-teal-700 tw-text-teal-100">
-                            AED @{{ montantTotal }}
-                            {{-- <animated-number :value="montantTotal" :format-value="formatToPrice" :duration="500" /> --}}
+                            <animated-number :value="montantTotal" :format-value="formatToPrice"
+                                :duration="500" />
                         </td>
                         <td class="tw-bg-indigo-600 tw-text-indigo-100">MONTANT TOTAL</td>
                         <td class="tw-bg-indigo-700 tw-text-indigo-100">
-
-                            AED @{{ (montantTotal / commande.currency_exchange_rate).toFixed(0) }}
-
-                            {{-- <animated-number :value="(montantTotal / commande.currency_exchange_rate).toFixed(0)"
-                                :duration="500" /> --}}
+                            AED <animated-number :value="(montantTotal / commande.currency_exchange_rate).toFixed(0)"
+                                :duration="500" />
                         </td>
                     </tr>
                 </tbody>

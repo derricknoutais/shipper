@@ -47,7 +47,7 @@
             <table class="table tw-mt-10">
                 <thead>
                     <tr>
-                        <th>Ligne Nº</th>
+                        {{-- <th>Ligne Nº</th> --}}
                         <th>Nom du Produit</th>
                         <th>Quantité</th>
                         <th>Prix Achat (AED)</th>
@@ -59,7 +59,7 @@
                 </thead>
                 <tbody>
                     {{-- Produits --}}
-                    <tr v-for="(sectionnable, index) in bc.sectionnables" v-if="sectionnable.product">
+                    <tr v-for="(sectionnable, key, index) in bc.sectionnables" v-if="sectionnable.product">
                         {{-- Index --}}
                         <td>@{{ index + 1 }}</td>
 
@@ -130,7 +130,7 @@
                         </td>
                     </tr>
                     {{-- Articles --}}
-                    <tr v-for="(sectionnable, index) in bc.sectionnables" v-if="sectionnable.article">
+                    <tr v-for="(sectionnable, key, index) in bc.sectionnables" v-if="sectionnable.article">
                         {{-- Index --}}
                         <td>@{{ index + 1 }}</td>
                         <td scope="row" class="tw-bg-gray-300 tw-border tw-border-gray-400">
@@ -166,6 +166,7 @@
                     </tr>
                     {{-- Total --}}
                     <tr>
+
                         <td colspan="2"></td>
                         <td scope="row"class="tw-text-right tw-bg-teal-600 tw-text-teal-100">MONTANT TOTAL</td>
                         <td class="tw-bg-teal-700 tw-text-teal-100">

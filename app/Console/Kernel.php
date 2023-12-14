@@ -21,6 +21,12 @@ class Kernel extends ConsoleKernel
                 PullAndInsertArticlesFromFidbak::dispatch();
             })
             ->everyFiveMinutes();
+
+        $schedule
+            ->call(function () {
+                Log::info("I'm running");
+            })
+            ->everyFiveMinutes();
     }
 
     protected function commands()

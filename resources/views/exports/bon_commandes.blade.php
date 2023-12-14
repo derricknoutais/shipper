@@ -18,20 +18,24 @@
         </tr>
         <tr></tr>
         <tr>
-            <td>ID</td>
+            <td>Ligne Nº</td>
             <td>Product</td>
             <td>Quantity</td>
             <td>Unit Price</td>
             <td>Total</td>
         </tr>
         @foreach ($bonCommande->sectionnables as $sectionnable)
+
             @if ($sectionnable->sectionnable_type === 'App\\Product')
                 <tr>
-                    <td>{{ $sectionnable->pivot->id }}</td>
+                    <td>{{ $loop->index + 1 }}</td>
+                    {{-- <td>{{ $sectionnable->pivot->id }}</td> --}}
                     @if ($sectionnable->pivot->traduction)
                         <td>{{ $sectionnable->pivot->traduction }}</td>
                     @elseif($sectionnable->traduction)
                         <td>{{ $sectionnable->traduction }}</td>
+                    @elseif(!$sectionnable->product)
+                        <td>SUPP/SUPP</td>
                     @elseif($sectionnable->product->handle)
                         <td>
                             {{ $sectionnable->product->handle->translation }}

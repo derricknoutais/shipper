@@ -695,7 +695,7 @@ export default {
         },
         list_type() {
             if (this.sectionnable_type === 'Product') {
-                this.label = 'name'
+                this.label = 'variant_name'
                 return this.products
             } else if (this.sectionnable_type === 'Template') {
                 this.label = 'name'

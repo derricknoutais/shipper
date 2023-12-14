@@ -47,6 +47,7 @@
             <table class="table tw-mt-10">
                 <thead>
                     <tr>
+                        <th>Ligne Nº</th>
                         <th>Nom du Produit</th>
                         <th>Quantité</th>
                         <th>Prix Achat (AED)</th>
@@ -59,6 +60,8 @@
                 <tbody>
                     {{-- Produits --}}
                     <tr v-for="(sectionnable, index) in bc.sectionnables" v-if="sectionnable.product">
+                        {{-- Index --}}
+                        <td>@{{ index + 1 }}</td>
 
                         {{-- Nom du Produit --}}
                         <td class="tw-bg-gray-300 tw-border tw-border-gray-400" scope="row">@{{ sectionnable.product.variant_name }} </td>

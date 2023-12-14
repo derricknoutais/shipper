@@ -61,6 +61,10 @@ Route::get('/update-products', function () {
 });
 
 Route::get('/test', function () {
+    return $diff;
+
+    // $distinct_handles->map(function);
+
     $articles = Http::timeout(6000)
         ->get(env('FIDBAK_URL') . '/api/articles')
         ->json();

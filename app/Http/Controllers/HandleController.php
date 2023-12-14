@@ -16,9 +16,10 @@ class HandleController extends Controller
     public function index()
     {
         $handles = Handle::orderBy('name')->get();
-        foreach ($handles as $handle ) {
-            $handle->product_example = Product::where('handle_id', $handle->id)->first();
-        }
+        $handles->map(function ($handle) {
+            $handle->product_example = Product::where('handle_name', $handle->name)->first();
+            return $handle;
+        });
         return view('handles.index', compact('handles'));
     }
 
@@ -30,9 +31,9 @@ class HandleController extends Controller
     public function create()
     {
         $products = Product::all();
-        foreach ($products as $product ) {
+        foreach ($products as $product) {
             $product->update([
-                'handle_id' => Handle::where('name', $product->handle)->first()->id
+                'handle_id' => Handle::where('name', $product->handle)->first()->id,
             ]);
         }
     }
@@ -83,9 +84,8 @@ class HandleController extends Controller
         // return $request['handle'][$request['field']];
 
         $handle->update([
-            $request['field'] => $request['handle'][$request['field']]
+            $request['field'] => $request['handle'][$request['field']],
         ]);
-
     }
 
     /**

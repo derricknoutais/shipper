@@ -2,14 +2,15 @@
 
 namespace App\Jobs;
 
+use App\Article;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
 
-class PullArticlesFromFidbak implements ShouldQueue
+class PullAndInsertArticlesFromFidbak implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -30,5 +31,7 @@ class PullArticlesFromFidbak implements ShouldQueue
             ->get(env('FIDBAK_URL') . '/api/articles')
             ->json();
         Redis::set('pulled_articles', json_encode($articles));
+        Article::all()->map->delete();
+        DB::table('articles')->insert($articles);
     }
 }

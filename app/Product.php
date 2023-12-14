@@ -23,6 +23,6 @@ class Product extends Model
     }
     public function handle()
     {
-        return $this->belongsTo('App\Handle', 'handle', 'name');
+        return $this->belongsTo('App\Handle', 'handle_name', 'name');
     }
 }

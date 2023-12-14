@@ -14,19 +14,19 @@ class Kernel extends ConsoleKernel
 
     protected function schedule(Schedule $schedule)
     {
-        $schedule
-            ->call(function () {
-                PullProductsFromPullDBIntoRedis::dispatch();
-                InsertPulledProductsToDatabase::dispatch();
-                PullAndInsertArticlesFromFidbak::dispatch();
-            })
-            ->everyFiveMinutes();
+        // $schedule
+        //     ->call(function () {
+        //         PullProductsFromPullDBIntoRedis::dispatch();
+        //         InsertPulledProductsToDatabase::dispatch();
+        //         PullAndInsertArticlesFromFidbak::dispatch();
+        //     })
+        //     ->everyFiveMinutes();
 
-        $schedule
-            ->call(function () {
-                Log::info("I'm running");
-            })
-            ->everyMinute();
+        // $schedule
+        //     ->call(function () {
+        //         Log::info("I'm running");
+        //     })
+        //     ->everyMinute();
     }
 
     protected function commands()

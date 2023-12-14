@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Handle;
 use App\Product;
 use Illuminate\Bus\Queueable;
 use Illuminate\Support\Facades\DB;

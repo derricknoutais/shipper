@@ -17,9 +17,9 @@ class Kernel extends ConsoleKernel
     {
         $schedule
             ->call(function () {
-                PullProductsFromPullDBIntoRedis::dispatch();
-                InsertPulledProductsToDatabase::dispatch();
-                PullAndInsertArticlesFromFidbak::dispatch();
+                // PullProductsFromPullDBIntoRedis::dispatch();
+                // InsertPulledProductsToDatabase::dispatch();
+                // PullAndInsertArticlesFromFidbak::dispatch();
             })
             ->everyMinute();
 

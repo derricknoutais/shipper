@@ -40,10 +40,12 @@ class BonCommandeController extends Controller
     }
     public function updateSectionnable($sectionnable, Request $request)
     {
-        DB::table('bon_commande_sectionnable')->where('id', $sectionnable)->update([
-            'quantite' => $request['pivot']['quantite'],
-            'prix_achat' => $request['pivot']['prix_achat']
-        ]);
+        DB::table('bon_commande_sectionnable')
+            ->where('id', $sectionnable)
+            ->update([
+                'quantite' => $request['pivot']['quantite'],
+                'prix_achat' => $request['pivot']['prix_achat'],
+            ]);
     }
     public function updateAllSectionnable(Request $request)
     {
@@ -66,11 +68,9 @@ class BonCommandeController extends Controller
 
     public function showConflit(Commande $commande)
     {
-
         $commande->load('demandes', 'bonsCommandes', 'demandes.sectionnables', 'sections', 'sections.articles', 'sections.products');
-        $conflits = array();
+        $conflits = [];
         foreach ($commande->sections as $section) {
-
             foreach ($section->articles as $article) {
                 if ($article->pivot->conflit === 1) {
                     array_push($conflits, $article);
@@ -83,7 +83,9 @@ class BonCommandeController extends Controller
             }
         }
         foreach ($conflits as $conflit) {
-            $conflit->elements_conflictuels = DB::table('demande_sectionnable')->where('sectionnable_id', $conflit->pivot->id)->get();
+            $conflit->elements_conflictuels = DB::table('demande_sectionnable')
+                ->where('sectionnable_id', $conflit->pivot->id)
+                ->get();
         }
         $commande->conflits = $conflits;
         return view('commande.conflits', compact('commande', 'conflits'));
@@ -105,7 +107,9 @@ class BonCommandeController extends Controller
     public function storeSectionnable(Request $request)
     {
         // Recupere tous les sectionnables de la commande
-        $sectionnables = Sectionnable::whereIn('section_id', Section::where('commande_id', $request['document']['commande_id'])->pluck('id'))->get()->toArray();
+        $sectionnables = Sectionnable::whereIn('section_id', Section::where('commande_id', $request['document']['commande_id'])->pluck('id'))
+            ->get()
+            ->toArray();
         // Filtre le Sectionnable
         $found = array_filter($sectionnables, function ($sectionnable) use ($request) {
             return $sectionnable['sectionnable_id'] === $request['product']['id'];
@@ -125,7 +129,8 @@ class BonCommandeController extends Controller
                     'quantite' => $request['product']['quantite'],
                     'created_at' => now(),
                     'updated_at' => now(),
-                    'conflit' => 0
+                    'conflit' => 0,
+                    'commande_id' => $section->commande_id,
                 ]);
                 // Insère le sectionnable au bon de commande
                 DB::table('bon_commande_sectionnable')->insert([
@@ -134,7 +139,7 @@ class BonCommandeController extends Controller
                     'quantite' => $request['product']['quantite'],
                     'prix_achat' => $request['product']['prix_achat'],
                     'created_at' => now(),
-                    'updated_at' => now()
+                    'updated_at' => now(),
                 ]);
                 return $sectionnable;
             } else {
@@ -142,7 +147,7 @@ class BonCommandeController extends Controller
                     'commande_id' => $request['document']['commande_id'],
                     'nom' => '***Retard***',
                     'created_at' => now(),
-                    'updated_at' => now()
+                    'updated_at' => now(),
                 ]);
                 // Crée le Sectionnable
                 $sectionnable = Sectionnable::create([
@@ -152,7 +157,8 @@ class BonCommandeController extends Controller
                     'quantite' => $request['product']['quantite'],
                     'created_at' => now(),
                     'updated_at' => now(),
-                    'conflit' => 0
+                    'conflit' => 0,
+                    'commande_id' => $section->commande_id,
                 ]);
                 // Insère le sectionnable au bon de commande
                 DB::table('bon_commande_sectionnable')->insert([
@@ -161,7 +167,7 @@ class BonCommandeController extends Controller
                     'quantite' => $request['product']['quantite'],
                     'prix_achat' => 0,
                     'created_at' => now(),
-                    'updated_at' => now()
+                    'updated_at' => now(),
                 ]);
             }
             return $sectionnable;
@@ -175,7 +181,7 @@ class BonCommandeController extends Controller
                 'quantite' => $request['product']['quantite'],
                 'prix_achat' => $request['product']['prix_achat'],
                 'created_at' => now(),
-                'updated_at' => now()
+                'updated_at' => now(),
             ]);
             return $found[0];
         }
@@ -187,15 +193,16 @@ class BonCommandeController extends Controller
 
         DB::table('bon_commande_sectionnable')->insert([
             'bon_commande_id' => $bc->id,
-            'sectionnable_id' => $request
+            'sectionnable_id' => $request,
         ]);
     }
 
     public function destroySectionnable($sectionnable)
     {
-        DB::table('bon_commande_sectionnable')->where('id', $sectionnable)->delete();
+        DB::table('bon_commande_sectionnable')
+            ->where('id', $sectionnable)
+            ->delete();
     }
-
 
     public function createInvoice(BonCommande $bc)
     {
@@ -204,20 +211,22 @@ class BonCommandeController extends Controller
             'commande_id' => $bc->commande_id,
             'demande_id' => $bc->demande_id,
             'fournisseur_id' => $bc->fournisseur_id,
-            'bon_commande_id' => $bc->id
+            'bon_commande_id' => $bc->id,
         ]);
         $bc->update([
-            'facture_id' => $facture->id
+            'facture_id' => $facture->id,
         ]);
 
-        $sectionnables = DB::table('bon_commande_sectionnable')->where('bon_commande_id', $bc->id)->get();
+        $sectionnables = DB::table('bon_commande_sectionnable')
+            ->where('bon_commande_id', $bc->id)
+            ->get();
 
         foreach ($sectionnables as $sectionnable) {
             DB::table('facture_sectionnable')->insert([
                 'sectionnable_id' => $sectionnable->sectionnable_id,
                 'facture_id' => $facture->id,
                 'quantite' => $sectionnable->quantite,
-                'prix_achat' => $sectionnable->prix_achat
+                'prix_achat' => $sectionnable->prix_achat,
             ]);
         }
 

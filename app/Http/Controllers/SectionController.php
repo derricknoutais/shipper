@@ -42,44 +42,48 @@ class SectionController extends Controller
         // return $request->all();
         $section = Section::create([
             'commande_id' => $request['commande'],
-            'nom' => $request['section']
+            'nom' => $request['section'],
         ]);
         DB::table('commandables')->insert([
             'commande_id' => $request['commande'],
             'commandable_id' => $section->id,
-            'commandable_type' => 'App\Section'
+            'commandable_type' => 'App\Section',
         ]);
         SectionAdded::dispatch($section);
         $section->loadMissing('sectionnables', 'sectionnables.product', 'sectionnables.article');
         return $section;
     }
 
-    public function addProduct(Request $request){
+    public function addProduct(Request $request)
+    {
         // return $request['type'];
-        if($request['type'] !== 'App\Template'){
+        $section = Section::find($request['section']);
+        if ($request['type'] !== 'App\Template') {
             $sectionnable = Sectionnable::create([
                 'section_id' => $request['section'],
                 'sectionnable_id' => $request['product']['id'],
                 'sectionnable_type' => $request['type'],
-                'quantite' => $request['product']['quantite']
+                'quantite' => $request['product']['quantite'],
+                'commande_id' => $section->commande_id,
             ]);
             return $sectionnable;
         } else {
             // $template = Template::where('id', $request['product']['id'])->with('products')->first();
             // $products = $template->products;
+            $section = Section::find($request['section']);
             foreach ($request['product']['products'] as $product) {
                 DB::table('sectionnables')->insert([
                     'section_id' => $request['section'],
                     'sectionnable_id' => $product['id'],
                     'sectionnable_type' => 'App\Product',
-                    'quantite' => $product['pivot']['quantite']
+                    'quantite' => $product['pivot']['quantite'],
+                    'commande_id' => $section->commande_id,
                 ]);
             }
             // return $products;
 
             // $commande->loadMissing('products', 'templates', 'templates.products', 'sections', 'sections.products', 'demandes', 'demandes.sectionnables', 'bonsCommandes', 'bonsCommandes.sectionnables', 'factures');
         }
-
     }
 
     /**
@@ -114,7 +118,7 @@ class SectionController extends Controller
     public function update(Request $request, Section $section)
     {
         $section->update([
-            'nom' => $request['nom']
+            'nom' => $request['nom'],
         ]);
     }
 
@@ -129,19 +133,23 @@ class SectionController extends Controller
         $section->delete();
     }
 
-    public function destroySectionnable ($sectionnable, $section){
+    public function destroySectionnable($sectionnable, $section)
+    {
         // return $sectionnable;
         $sectionnables = Sectionnable::where(['sectionnable_id' => $sectionnable, 'section_id' => $section])->get();
-        foreach ($sectionnables as $sectionnable ) {
+        foreach ($sectionnables as $sectionnable) {
             $sectionnable->delete();
         }
         // $sectionnable->delete();
     }
 
-    public function patchSectionnable(Request $request){
-        DB::table('sectionnables')->where('id', $request['id'])->update([
-            $request['field'] => $request['value']
-        ]);
+    public function patchSectionnable(Request $request)
+    {
+        DB::table('sectionnables')
+            ->where('id', $request['id'])
+            ->update([
+                $request['field'] => $request['value'],
+            ]);
         return 1;
     }
 }

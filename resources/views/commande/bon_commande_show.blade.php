@@ -27,7 +27,7 @@
             <div class="tw-flex tw-items-center tw">
                 <multiselect class="tw-cursor-text" v-model="newProduct" :options="{{ $products }}"
                     :searchable="true" :close-on-select="true" :show-labels="false" placeholder="Pick a value"
-                    label="name"></multiselect>
+                    label="variant_name"></multiselect>
 
                 <div>
                     <input v-if="newProduct" type="number" v-model.number="newProduct.quantite"

@@ -35,6 +35,7 @@ class PullProductsFromPullDBIntoRedis implements ShouldQueue
         $response = Http::timeout(6000)
             ->get(env('PULLDB_URL') . '/api/products')
             ->json();
+        Redis::del('pulled_products');
         Redis::set('pulled_products', json_encode($response));
     }
 }

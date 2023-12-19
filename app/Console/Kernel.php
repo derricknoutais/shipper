@@ -23,7 +23,7 @@ class Kernel extends ConsoleKernel
                 SortAndInsertHandles::dispatch();
                 PullAndInsertArticlesFromFidbak::dispatch();
             })
-            ->everyMinute();
+            ->everyTenMinutes();
 
         // $schedule
         //     ->call(function () {

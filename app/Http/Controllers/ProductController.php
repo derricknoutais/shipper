@@ -18,9 +18,10 @@ class ProductController extends Controller
         } else {
             $request->handle = 1;
         }
+        $handle = Handle::find($request->handle);
 
         if (isset($request->handle)) {
-            $products = Product::where('handle_name', $request->handle)
+            $products = Product::where('handle_name', $handle->name)
                 ->with('fournisseurs')
                 ->get();
         } else {

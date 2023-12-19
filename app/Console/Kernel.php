@@ -21,7 +21,7 @@ class Kernel extends ConsoleKernel
                 // InsertPulledProductsToDatabase::dispatch();
                 // PullAndInsertArticlesFromFidbak::dispatch();
             })
-            ->everyMinute();
+            ->everyHour();
 
         // $schedule
         //     ->call(function () {

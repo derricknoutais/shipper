@@ -35,6 +35,8 @@ class PullAndInsertArticlesFromFidbak implements ShouldQueue
             ->json();
         Redis::set('pulled_articles', json_encode($articles));
         Article::all()->map->delete();
-        DB::table('articles')->insert($articles);
+        foreach (array_chunk($articles, 1000) as $data) {
+            DB::table('articles')->insert($data);
+        }
     }
 }

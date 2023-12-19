@@ -44,7 +44,7 @@ class InsertPulledProductsToDatabase implements ShouldQueue
         $final_prods = collect($products)->map(function ($item) {
             // Transforme chaque produit en collection pour pouvoir
             $t = collect($item);
-            $t->handle_name = $t->handle;
+            $t['handle_name'] = $t['handle'];
             $variants = json_decode($t['variant_options'], true);
             $variant_keys = ['variant_option_one_value', 'variant_option_two_value', 'variant_option_three_value'];
             for ($i = 0; $i < 3; $i++) {
@@ -63,9 +63,9 @@ class InsertPulledProductsToDatabase implements ShouldQueue
         // Inserer Final Produits dans Database
         // DB::table('products')->upsert($final_prods->toArray(), ['id'], ['id', 'name', 'variant_parent_id', 'variant_name', 'variant_option_one_value', 'variant_option_two_value', 'variant_option_three_value', 'handle_name', 'sku', 'price_including_tax', 'price_excluding_tax', 'active', 'has_inventory', 'is_composite', 'description', 'created_at', 'updated_at', 'deleted_at', 'source', 'supply_price', 'version', 'type', 'is_active']);
 
-        // foreach (array_chunk($final_prods->toArray(), 1000) as $data) {
-        //     DB::table('products')->insert($data);
-        // }
+        foreach (array_chunk($final_prods->toArray(), 1000) as $data) {
+            DB::table('products')->insert($data);
+        }
         // Inserer les Nouveaux Handles
         $distinct_handles = DB::table('products')
             ->distinct()

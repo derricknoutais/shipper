@@ -26,6 +26,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Route;
 use App\Jobs\InsertPulledProductsToDatabase;
+use App\Jobs\PullAndInsertArticlesFromFidbak;
 use App\Jobs\PullProductsFromPullDBIntoRedis;
 
 header('Access-Control-Allow-Origin:  *');
@@ -61,60 +62,10 @@ Route::get('/update-products', function () {
 });
 
 Route::get('/test', function () {
-    $response = Http::timeout(6000)
-        ->get(env('PULLDB_URL') . '/api/products')
-        ->json();
-    Redis::set('pulled_products', json_encode($response));
-    return sizeof($response);
-    Log::info('%%%%% Starting to Insert Products %%%%');
-
-    return $products = sizeof(json_decode(Redis::get('pulled_products'), true));
-    // return sizeof($products);
-
-    // Transforme prods en collection
-    $final_prods = collect($products)->map(function ($item) {
-        // Transforme chaque produit en collection pour pouvoir
-        $t = collect($item);
-        $t->handle_name = $t->handle;
-        $variants = json_decode($t['variant_options'], true);
-        $variant_keys = ['variant_option_one_value', 'variant_option_two_value', 'variant_option_three_value'];
-        for ($i = 0; $i < 3; $i++) {
-            if (isset($variants[$i])) {
-                $t[$variant_keys[$i]] = $variants[$i]['value'];
-            } else {
-                $t[$variant_keys[$i]] = null;
-            }
-        }
-
-        // Trier et retourner les donnees ci-dessous
-        return $t->only(['id', 'name', 'variant_parent_id', 'variant_name', 'variant_option_one_value', 'variant_option_two_value', 'variant_option_three_value', 'handle_name', 'sku', 'price_including_tax', 'price_excluding_tax', 'active', 'has_inventory', 'is_composite', 'description', 'created_at', 'updated_at', 'deleted_at', 'source', 'supply_price', 'version', 'type', 'is_active']);
-        return $t->only(['id', 'source_id', 'source_variant_id', 'variant_parent_id', 'name', 'variant_name', 'variant_options', 'variant_option_one_value', 'variant_option_two_value', 'variant_option_three_value', 'handle', 'sku', 'price_including_tax', 'price_excluding_tax', 'supplier_code', 'active', 'ecwid_enabled_webstore', 'has_inventory', 'is_composite', 'description', 'image_url', 'created_at', 'updated_at', 'deleted_at', 'source', 'account_code', 'account_code_purchase', 'supply_price', 'version', 'type', 'product_category', 'supplier', 'brand', 'categories', 'images', 'skuImages', 'has_variants', 'variant_count', 'button_order', 'loyalty_amount', 'product_codes', 'product_suppliers', 'packaging', 'weight', 'weight_unit', 'length', 'width', 'height', 'dimensions_unit', 'attributes', 'is_active', 'image_thumbnail_url', 'product_type_id', 'supplier_id', 'brand_id', 'tag_ids']);
-    });
-    // Product::all()->map->delete();
-    // Inserer Final Produits dans Database
-    // DB::table('products')->upsert($final_prods->toArray(), ['id'], ['id', 'name', 'variant_parent_id', 'variant_name', 'variant_option_one_value', 'variant_option_two_value', 'variant_option_three_value', 'handle_name', 'sku', 'price_including_tax', 'price_excluding_tax', 'active', 'has_inventory', 'is_composite', 'description', 'created_at', 'updated_at', 'deleted_at', 'source', 'supply_price', 'version', 'type', 'is_active']);
-
-    // foreach (array_chunk($final_prods->toArray(), 1000) as $data) {
-    //     DB::table('products')->insert($data);
-    // }
-    // Inserer les Nouveaux Handles
-    $distinct_handles = DB::table('products')
-        ->distinct()
-        ->get('handle_name')
-        ->map(function ($handle) {
-            return $handle->handle_name;
-        });
-    $handles = Handle::get('name')->map(function ($handle) {
-        return $handle->name;
-    });
-    $diff = array_diff($distinct_handles->toArray(), $handles->toArray());
-    foreach ($diff as $handle_name) {
-        Handle::create([
-            'name' => $handle_name,
-        ]);
-    }
-
-    Log::info('%%%%% Done Inserting Products %%%%%');
+    // return $products = json_decode(Redis::get('pulled_products'), true);
+    PullProductsFromPullDBIntoRedis::dispatch();
+    InsertPulledProductsToDatabase::dispatch();
+    PullAndInsertArticlesFromFidbak::dispatch();
 });
 
 Route::middleware(['auth'])->group(function () {

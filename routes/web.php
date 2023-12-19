@@ -421,13 +421,13 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::get('/subzero/{product}/{apres?}/{avant?}', function ($product, $apres = null, $avant = null) {
-        $client = new Client();
-        $headers = [
-            'Authorization' => 'Bearer ' . env('VEND_TOKEN'),
-            'Accept' => 'application/json',
-        ];
-        $response = $client->request('GET', 'http://subzero.stapog.com/api/sub/' . $product . ($apres ? '/' . $apres : null) . ($avant ? '/' . $avant : null));
-        return $data = json_decode((string) $response->getBody(), true);
+        // $client = new Client();
+        // $headers = [
+        //     'Authorization' => 'Bearer ' . env('VEND_TOKEN'),
+        //     'Accept' => 'application/json',
+        // ];
+        // $response = $client->request('GET', 'https://stapog.com/api/sub/' . $product . ($apres ? '/' . $apres : null) . ($avant ? '/' . $avant : null));
+        // return $data = json_decode((string) $response->getBody(), true);
     });
 
     // VEND API

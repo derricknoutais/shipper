@@ -23,6 +23,9 @@ class InsertPulledProductsToDatabase implements ShouldQueue
      *
      * @return void
      */
+
+    public $timeout = 120;
+
     public function __construct()
     {
         //

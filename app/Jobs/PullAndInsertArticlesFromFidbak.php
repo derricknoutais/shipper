@@ -35,7 +35,7 @@ class PullAndInsertArticlesFromFidbak implements ShouldQueue
         $articles = Http::timeout(6000)
             ->get(env('FIDBAK_URL') . '/api/articles')
             ->json();
-        Redis::set('pulled_articles', json_encode($articles));
+        Redis::set('shipper_pulled_articles', json_encode($articles));
 
         Article::all()->map->delete();
         foreach (array_chunk($articles, 1000) as $data) {

@@ -37,7 +37,7 @@ class InsertPulledProductsToDatabase implements ShouldQueue
     {
         Log::info('%%%%% Starting to Insert Products %%%%');
 
-        $products = json_decode(Redis::get('pulled_products'), true);
+        $products = json_decode(Redis::get('shipper_pulled_products'), true);
         // return sizeof($products);
 
         // Transforme prods en collection

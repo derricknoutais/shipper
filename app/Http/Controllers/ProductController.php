@@ -12,6 +12,7 @@ class ProductController extends Controller
 {
     public function index(Request $request)
     {
+        $handle_filter = 1;
         if (isset($request->handle)) {
             $handle_filter = $request->handle;
         } else {

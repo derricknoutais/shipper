@@ -65,7 +65,7 @@ class InsertPulledProductsToDatabase implements ShouldQueue
         Product::all()->map->delete();
         foreach (array_chunk($final_prods->toArray(), 2000, true) as $data) {
             Log::info(sizeof($data));
-            DB::table('products')->insert($final_prods->toArray());
+            DB::table('products')->insert($data);
             // DB::table('products')->upsert($data, ['id'], ['id', 'name', 'variant_parent_id', 'variant_name', 'variant_option_one_value', 'variant_option_two_value', 'variant_option_three_value', 'handle_name', 'sku', 'price_including_tax', 'price_excluding_tax', 'active', 'has_inventory', 'is_composite', 'description', 'created_at', 'updated_at', 'deleted_at', 'source', 'supply_price', 'version', 'type', 'is_active']);
         }
         Log::info('%%%%% Done Inserting Products %%%%%');

@@ -67,23 +67,6 @@ class InsertPulledProductsToDatabase implements ShouldQueue
             DB::table('products')->insert($data);
             // DB::table('products')->upsert($data, ['id'], ['id', 'name', 'variant_parent_id', 'variant_name', 'variant_option_one_value', 'variant_option_two_value', 'variant_option_three_value', 'handle_name', 'sku', 'price_including_tax', 'price_excluding_tax', 'active', 'has_inventory', 'is_composite', 'description', 'created_at', 'updated_at', 'deleted_at', 'source', 'supply_price', 'version', 'type', 'is_active']);
         }
-        // Inserer les Nouveaux Handles
-        $distinct_handles = DB::table('products')
-            ->distinct()
-            ->get('handle_name')
-            ->map(function ($handle) {
-                return $handle->handle_name;
-            });
-        $handles = Handle::get('name')->map(function ($handle) {
-            return $handle->name;
-        });
-        $diff = array_diff($distinct_handles->toArray(), $handles->toArray());
-        foreach ($diff as $handle_name) {
-            Handle::create([
-                'name' => $handle_name,
-            ]);
-        }
-
         Log::info('%%%%% Done Inserting Products %%%%%');
     }
 }

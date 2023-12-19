@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Jobs\SortAndInsertHandles;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Console\Scheduling\Schedule;
 use App\Jobs\InsertPulledProductsToDatabase;

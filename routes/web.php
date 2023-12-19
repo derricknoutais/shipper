@@ -64,9 +64,9 @@ Route::get('/update-products', function () {
 
 Route::get('/test', function () {
     // return $products = json_decode(Redis::get('pulled_products'), true);
-    // PullProductsFromPullDBIntoRedis::dispatch();
-    // InsertPulledProductsToDatabase::dispatch();
-    // PullAndInsertArticlesFromFidbak::dispatch();
+    PullProductsFromPullDBIntoRedis::dispatch();
+    InsertPulledProductsToDatabase::dispatch();
+    PullAndInsertArticlesFromFidbak::dispatch();
     SortAndInsertHandles::dispatch();
 });
 

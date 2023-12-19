@@ -19,6 +19,7 @@ class Kernel extends ConsoleKernel
             ->call(function () {
                 // PullProductsFromPullDBIntoRedis::dispatch();
                 // InsertPulledProductsToDatabase::dispatch();
+                // SortAndInsertHandles::dispatch();
                 // PullAndInsertArticlesFromFidbak::dispatch();
             })
             ->hourly();

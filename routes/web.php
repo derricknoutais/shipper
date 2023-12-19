@@ -19,6 +19,7 @@ use App\Jobs\SyncSales;
 use App\Events\SectionAdded;
 use App\Jobs\UpdateProducts;
 use Illuminate\Http\Request;
+use App\Jobs\SortAndInsertHandles;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
@@ -63,9 +64,10 @@ Route::get('/update-products', function () {
 
 Route::get('/test', function () {
     // return $products = json_decode(Redis::get('pulled_products'), true);
-    PullProductsFromPullDBIntoRedis::dispatch();
-    InsertPulledProductsToDatabase::dispatch();
-    PullAndInsertArticlesFromFidbak::dispatch();
+    // PullProductsFromPullDBIntoRedis::dispatch();
+    // InsertPulledProductsToDatabase::dispatch();
+    // PullAndInsertArticlesFromFidbak::dispatch();
+    SortAndInsertHandles::dispatch();
 });
 
 Route::middleware(['auth'])->group(function () {

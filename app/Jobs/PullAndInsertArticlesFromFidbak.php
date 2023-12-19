@@ -30,13 +30,16 @@ class PullAndInsertArticlesFromFidbak implements ShouldQueue
      */
     public function handle(): void
     {
+        Log::info('|_|_|_| - Pulling and Inserting Articles - |_|_|_|');
         $articles = Http::timeout(6000)
             ->get(env('FIDBAK_URL') . '/api/articles')
             ->json();
         Redis::set('pulled_articles', json_encode($articles));
+
         Article::all()->map->delete();
         foreach (array_chunk($articles, 1000) as $data) {
             DB::table('articles')->insert($data);
         }
+        Log::info('|_|_|_| - Done With Articles - |_|_|_|');
     }
 }

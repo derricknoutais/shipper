@@ -17,10 +17,10 @@ class Kernel extends ConsoleKernel
     {
         $schedule
             ->call(function () {
-                // PullProductsFromPullDBIntoRedis::dispatch();
-                // InsertPulledProductsToDatabase::dispatch();
-                // SortAndInsertHandles::dispatch();
-                // PullAndInsertArticlesFromFidbak::dispatch();
+                PullProductsFromPullDBIntoRedis::dispatch();
+                InsertPulledProductsToDatabase::dispatch();
+                SortAndInsertHandles::dispatch();
+                PullAndInsertArticlesFromFidbak::dispatch();
             })
             ->hourly();
 

@@ -19,7 +19,7 @@ class ProductController extends Controller
         }
 
         if (isset($request->handle)) {
-            $products = Product::where('handle_id', $request->handle)
+            $products = Product::where('handle_name', $request->handle)
                 ->with('fournisseurs')
                 ->get();
         } else {

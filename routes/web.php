@@ -65,7 +65,7 @@ Route::get('/update-products', function () {
 Route::get('/test', function () {
     Log::info('***** Starting to handle Handles *****');
     // Inserer les Nouveaux Handles
-    return $distinct_handles = DB::table('products')
+    $distinct_handles = DB::table('products')
         ->distinct()
         ->get('handle_name')
         ->map(function ($handle) {

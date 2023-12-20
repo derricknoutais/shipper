@@ -213,7 +213,7 @@
                                     entrées!!!</span>
                                 <span v-else>@{{ sectionnable.pivot.quantite_offerte * sectionnable.pivot.offre | currency }}</span>
                             </td>
-                            {{-- OFFRE (AED) --}}
+                            {{-- OFFRE (XAF) --}}
                             <td v-show="toDisplay.offerXaf">
                                 <input type="number" class="form-control"
                                     :class="{
@@ -318,33 +318,25 @@
                             </td>
 
                         </tr>
-                        {{-- Option Branding 2.0 <tr v-show="sectionnable.displayDetails" class=" tw-bg-gray-700 tw-text-white">
-                        <td colspan=9 class="tw-py-10 tw-mx-10">
-                            <div class="tw-flex tw-items-center">
-                                <span v-for="brand in sectionnable.product.handle.brands " class="tw-w-1/3 tw-flex tw-items-center">
-                                    Reference @{{ brand.nom }}
-                                    <input name="" id="" class="form-control tw-inline-block tw-w-1/2 tw-mx-3" type="text">
-                                    <i class="fas fa-check-circle tw-text-green-700 fa-lg"></i>
-                                    <i class="fas fa-times-circle fa-lg tw-text-red-500 tw-mx-3"></i>
-                                </span>
-
-                            </div>
-                        </td>
-                    </tr> --}}
                     </template>
 
                     {{-- ARTICLES --}}
                     <template v-for="(sectionnable, index) in demande.sectionnables" v-if="sectionnable.article">
                         <tr>
+                            {{-- Toggle --}}
                             <td>
                                 <i class="fas fa-chevron-down tw-cursor-pointer" @click="toggleDetails(sectionnable)"
                                     v-if="sectionnable.displayDetails"></i>
                                 <i class="fas fa-chevron-right tw-cursor-pointer" @click="toggleDetails(sectionnable)"
                                     v-if="! sectionnable.displayDetails"></i>
                             </td>
-                            <td>@{{ sectionnable.pivot.id }}</td>
-                            <td scope="row">@{{ sectionnable.article.nom }}</td>
-                            <td>
+
+                            {{-- ID --}}
+                            <td v-show="toDisplay.id">@{{ sectionnable.pivot.id }}</td>
+                            {{-- Produit Français --}}
+                            <td scope="row" v-show="toDisplay.product">@{{ sectionnable.article.nom }}</td>
+                            {{-- Product (Traduction) --}}
+                            <td v-show="toDisplay.traduction">
                                 <span v-if="sectionnable.pivot.traduction && ! sectionnable.editing">
                                     @{{ sectionnable.pivot.traduction }}
                                     <i class="fas fa-pen tw-mx-3 tw-cursor-pointer tw-text-blue-600"
@@ -363,8 +355,8 @@
                                         @click="updateSectionnable(sectionnable, 'traduction', sectionnable.pivot.traduction)"></i>
                                 </span>
                             </td>
-                            <td>
-
+                            {{-- Différente Offre --}}
+                            <td v-show="toDisplay.differentOffer">
                                 <input class="form-check-input" type="checkbox"
                                     v-model="sectionnable.pivot.differente_offre"
                                     @change="updateSectionnable(sectionnable, 'differente_offre' , sectionnable.pivot.differente_offre)">
@@ -373,8 +365,10 @@
                                     type="text" v-model="sectionnable.pivot.reference_differente_offre"
                                     @change="updateSectionnable(sectionnable, 'reference_differente_offre' ,sectionnable.pivot.reference_differente_offre)">
                             </td>
-                            <td>@{{ sectionnable.quantite }} </td>
-                            <td class="tw-flex-col tw-items-center">
+                            {{-- QUANTITE --}}
+                            <td v-show="toDisplay.quantite">@{{ sectionnable.quantite }} </td>
+                            {{-- QUANTITE OFFERTE --}}
+                            <td v-show="toDisplay.offeredQuantity" class="tw-flex-col tw-items-center">
                                 <div class="tw-flex">
                                     <i class="fas fa-arrow-down tw-text-red-500 tw-px-5"
                                         v-if="sectionnable.pivot.quantite_offerte < sectionnable.quantite"></i>
@@ -392,13 +386,26 @@
                                             'tw-text-red-500'">@{{ sectionnable.transfer_state }}</span>
                                 </div>
                             </td>
-                            <td>
+                            {{-- OFFRE (AED) --}}
+                            <td v-show="toDisplay.offerAed">
                                 <input type="text" class="form-control" v-model.number="sectionnable.pivot.offre"
-                                    @input="enregisterOffre(sectionnable)">
+                                    @input="enregisterOffre(sectionnable)" @keyup="convertToXaf(sectionnable, index)">
                             </td>
-                            <td>
+                            {{-- TOTAL (AED) --}}
+                            <td v-show="toDisplay.totalAed">
                                 @{{ sectionnable.pivot.quantite_offerte * sectionnable.pivot.offre | currency }}
                             </td>
+                            {{-- OFFRE (XAF) --}}
+                            <td v-show="toDisplay.offerXaf">
+                                <input type="number" class="form-control"
+                                    :class="{
+                                        'tw-border-red-500': sectionnable
+                                            .hasError,
+                                        'focus:tw-border-red-500': sectionnable.hasError
+                                    }"
+                                    min="0" step="1" :ref="'offerXaf_' + index"
+                                    :value="sectionnable.pivot.offre * demande.commande.currency_exchange_rate"
+                                    @keyup="convertToXaf(sectionnable, index)">
                             <td>
                                 <i class="fas fa-trash tw-text-red-500 tw-cursor-pointer"
                                     @click="openDeleteModal(sectionnable)"></i>

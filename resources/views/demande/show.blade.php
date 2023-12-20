@@ -146,17 +146,17 @@
 
                                 </span>
                             </td>
-                            <td scope="row" v-else-if="sectionnable.product.handle_data" v-show="toDisplay.traduction">
+                            <td scope="row" v-else-if="sectionnable.product.handle" v-show="toDisplay.traduction">
 
                                 <span class="tw-flex tw-items-center tw-justify-between">
                                     <span>
-                                        @{{ sectionnable.product.handle_data.translation }}
-                                        <span v-if="sectionnable.product.handle_data.display1">/
-                                            @{{ sectionnable.product[sectionnable.product.handle_data.display1] }}</span>
-                                        <span v-if="sectionnable.product.handle_data.display2">/
-                                            @{{ sectionnable.product[sectionnable.product.handle_data.display2] }}</span>
-                                        <span v-if="sectionnable.product.handle_data.display3">/
-                                            @{{ sectionnable.product[sectionnable.product.handle_data.display3] }}</span>
+                                        @{{ sectionnable.product.handle.translation }}
+                                        <span v-if="sectionnable.product.handle.display1">/
+                                            @{{ sectionnable.product[sectionnable.product.handle.display1] }}</span>
+                                        <span v-if="sectionnable.product.handle.display2">/
+                                            @{{ sectionnable.product[sectionnable.product.handle.display2] }}</span>
+                                        <span v-if="sectionnable.product.handle.display3">/
+                                            @{{ sectionnable.product[sectionnable.product.handle.display3] }}</span>
                                     </span>
                                     <i class="fas fa-pen tw-mx-3 tw-cursor-pointer tw-text-blue-600"
                                         @click="editTraduction(sectionnable)"></i>
@@ -321,7 +321,7 @@
                         {{-- Option Branding 2.0 <tr v-show="sectionnable.displayDetails" class=" tw-bg-gray-700 tw-text-white">
                         <td colspan=9 class="tw-py-10 tw-mx-10">
                             <div class="tw-flex tw-items-center">
-                                <span v-for="brand in sectionnable.product.handle_data.brands " class="tw-w-1/3 tw-flex tw-items-center">
+                                <span v-for="brand in sectionnable.product.handle.brands " class="tw-w-1/3 tw-flex tw-items-center">
                                     Reference @{{ brand.nom }}
                                     <input name="" id="" class="form-control tw-inline-block tw-w-1/2 tw-mx-3" type="text">
                                     <i class="fas fa-check-circle tw-text-green-700 fa-lg"></i>

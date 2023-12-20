@@ -63,11 +63,24 @@ Route::get('/update-products', function () {
 });
 
 Route::get('/test', function () {
-    // return $products = json_decode(Redis::get('pulled_products'), true);
-    PullProductsFromPullDBIntoRedis::dispatch();
-    InsertPulledProductsToDatabase::dispatch();
-    PullAndInsertArticlesFromFidbak::dispatch();
-    SortAndInsertHandles::dispatch();
+    Log::info('***** Starting to handle Handles *****');
+    // Inserer les Nouveaux Handles
+    return $distinct_handles = DB::table('products')
+        ->distinct()
+        ->get('handle_name')
+        ->map(function ($handle) {
+            return $handle->handle_name;
+        });
+    $handles = Handle::get('name')->map(function ($handle) {
+        return $handle->name;
+    });
+    $diff = array_diff($distinct_handles->toArray(), $handles->toArray());
+    foreach ($diff as $handle_name) {
+        Handle::create([
+            'name' => $handle_name,
+        ]);
+    }
+    Log::info('***** Done Handling Handles *****');
 });
 
 Route::middleware(['auth'])->group(function () {

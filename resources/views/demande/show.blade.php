@@ -204,8 +204,9 @@
                                             .hasError,
                                         'focus:tw-border-red-500': sectionnable.hasError
                                     }"
-                                    min="0" step="1" v-model.number="sectionnable.pivot.offre"
-                                    @input="enregisterOffre(sectionnable)" @keyup="convertToXaf(sectionnable, index)">
+                                    min="0" step="1" :ref="'offerAed_' + index"
+                                    v-model.number="sectionnable.pivot.offre" @input="enregisterOffre(sectionnable)"
+                                    @keyup="convertToXaf(sectionnable, index)">
                             </td>
                             {{-- TOTAL (AED) --}}
                             <td v-show="toDisplay.totalAed">
@@ -388,8 +389,15 @@
                             </td>
                             {{-- OFFRE (AED) --}}
                             <td v-show="toDisplay.offerAed">
-                                <input type="text" class="form-control" v-model.number="sectionnable.pivot.offre"
-                                    @input="enregisterOffre(sectionnable)" @keyup="convertToXaf(sectionnable, index)">
+                                <input type="number" class="form-control"
+                                    :class="{
+                                        'tw-border-red-500': sectionnable
+                                            .hasError,
+                                        'focus:tw-border-red-500': sectionnable.hasError
+                                    }"
+                                    min="0" step="1" :ref="'offerAed_' + index"
+                                    v-model.number="sectionnable.pivot.offre" @input="enregisterOffre(sectionnable)"
+                                    @keyup="convertToXaf(sectionnable, index)">
                             </td>
                             {{-- TOTAL (AED) --}}
                             <td v-show="toDisplay.totalAed">
@@ -405,8 +413,15 @@
                                     }"
                                     min="0" step="1" :ref="'offerXaf_' + index"
                                     :value="sectionnable.pivot.offre * demande.commande.currency_exchange_rate"
-                                    @keyup="convertToXaf(sectionnable, index)">
+                                    @keyup="convertToAed(sectionnable, index)">
                             <td>
+                                {{-- TOTAL (XAF) --}}
+                            <td v-show="toDisplay.totalXaf">
+                                <span v-if="sectionnable.hasError" class="tw-text-red-500"> Erreur! Vérifiez vos
+                                    entrées!!!</span>
+                                <span v-else>@{{ sectionnable.pivot.quantite_offerte * (sectionnable.pivot.offre * demande.commande.currency_exchange_rate).toFixed(0) | currency }}</span>
+                            </td>
+                            <td v-show="toDisplay.actions">
                                 <i class="fas fa-trash tw-text-red-500 tw-cursor-pointer"
                                     @click="openDeleteModal(sectionnable)"></i>
                                 <i class="fa fa-share-square tw-cursor-pointer tw-text-green-500 tw-ml-2"

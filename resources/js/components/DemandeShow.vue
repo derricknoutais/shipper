@@ -42,13 +42,14 @@ export default {
     },
     methods: {
 
-        convertToXaf(sectionnable, index) {
-            sectionnable.pivot.offre = this.$refs['offerXaf_' + index][0].value * demande.commande.currency_exchange_rate
-            this.$forceUpdate()
-            this.enregisterOffre(sectionnable)
-        },
         convertToAed(sectionnable, index) {
-            this.$refs['offerAed_' + index][0].value = sectionnable.pivot.offre / demande.commande.currency_exchange_rate;
+            sectionnable.pivot.offre = this.$refs['offerXaf_' + index][0].value / this.demande.commande.currency_exchange_rate
+            this.$forceUpdate()
+            // this.enregisterOffre(sectionnable)
+        },
+        convertToXaf(sectionnable, index) {
+            console.log(sectionnable.pivot.offre)
+            this.$refs['offerXaf_' + index][0].value = sectionnable.pivot.offre / this.demande.commande.currency_exchange_rate;
             this.$forceUpdate
         },
         creerBonCommande(demande) {

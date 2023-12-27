@@ -12,7 +12,6 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Support\Facades\Log;
 
-
 class SyncSales implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
@@ -34,22 +33,16 @@ class SyncSales implements ShouldQueue
     {
         $client = new Client();
         $headers = [
-            "Authorization" => "Bearer " . env('VEND_TOKEN'),
-            "Accept"        => "application/json"
+            'Authorization' => 'Bearer ' . env('VEND_TOKEN'),
+            'Accept' => 'application/json',
         ];
 
-        Log::info("Getting sales after " );
-
-        $response = $client->request('GET', 'https://stapog.vendhq.com/api/2.0/search?type=sales&date_from=' . $this->date_from,
-            ['headers' => $headers]
-        );
+        $response = $client->request('GET', 'https://stapog.vendhq.com/api/2.0/search?type=sales&date_from=' . $this->date_from, ['headers' => $headers]);
         $data = json_decode((string) $response->getBody(), true);
-        foreach($data['data'] as $sale)
-        {
+        foreach ($data['data'] as $sale) {
             Redis::zadd('sales', $sale['invoice_number'], json_encode($sale));
         }
-            // $after = $data['version']['max'];
-            // Redis::set('after', $after);
-        Log::info("Got " . count($data['data']) . " sales");
+        // $after = $data['version']['max'];
+        // Redis::set('after', $after);
     }
 }

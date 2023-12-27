@@ -63,7 +63,7 @@ Route::get('/update-products', function () {
 });
 
 Route::get('/test', function () {
-    Log::info('***** Starting to handle Handles *****');
+
     // Inserer les Nouveaux Handles
     $distinct_handles = DB::table('products')
         ->distinct()
@@ -80,7 +80,7 @@ Route::get('/test', function () {
             'name' => $handle_name,
         ]);
     }
-    Log::info('***** Done Handling Handles *****');
+
 });
 
 Route::middleware(['auth'])->group(function () {

@@ -36,29 +36,28 @@ class UpdateProducts implements ShouldQueue
     {
         $client = new Client();
         $headers = [
-            "Authorization" => "Bearer " . env('VEND_TOKEN'),
-            'Accept'        => 'application/json',
+            'Authorization' => 'Bearer ' . env('VEND_TOKEN'),
+            'Accept' => 'application/json',
         ];
-        $pages = array();
+        $pages = [];
         $nb_prod = 0;
         for ($j = 16; $j <= 30; $j++) {
             $response = $client->request('GET', 'https://stapog.vendhq.com/api/products?page_size=200&page=' . $j, ['headers' => $headers]);
             $data = json_decode((string) $response->getBody(), true);
             array_push($pages, $data['products']);
             $nb_prod += sizeof($data['products']);
-            Log::info('Finished Rotation ' . $j . 'with ' . sizeof($data['products']) . ' products soit ' . $nb_prod . ' au total' );
         }
         $k = 0;
         $nb_pages = sizeof($pages);
-        Log::info('Size Of Pages ' . sizeof($pages)  );
+
         foreach ($pages as $products) {
             foreach ($products as $product) {
-                if(!$handle = Handle::where('name' , $product['handle'])->first()){
+                if (!($handle = Handle::where('name', $product['handle'])->first())) {
                     $handle = Handle::create([
-                        'name' => $product['handle']
+                        'name' => $product['handle'],
                     ]);
                 }
-                if (! Product::where('id', $product['id'])->first()) {
+                if (!Product::where('id', $product['id'])->first()) {
                     $prod = Product::create([
                         'id' => $product['id'],
                         'handle_id' => $handle->id,
@@ -71,14 +70,14 @@ class UpdateProducts implements ShouldQueue
                         'variant_option_two_name' => $product['variant_option_two_name'],
                         'variant_option_two_value' => $product['variant_option_two_value'],
                         'variant_option_three_name' => $product['variant_option_three_name'],
-                        'variant_option_three_value' => $product['variant_option_three_value']
+                        'variant_option_three_value' => $product['variant_option_three_value'],
                     ]);
-                    if( isset($product['inventory']) && isset($product['inventory'][0]['count'])){
+                    if (isset($product['inventory']) && isset($product['inventory'][0]['count'])) {
                         Product::find($product['id'])->update([
-                            'quantity' => ( (int) $product['inventory'][0]['count'] )
-                        ]) ;
+                            'quantity' => ((int) $product['inventory'][0]['count']),
+                        ]);
                     }
-                    if($prod){
+                    if ($prod) {
                         $k += 1;
                     }
                 } else {
@@ -88,13 +87,11 @@ class UpdateProducts implements ShouldQueue
                         'variant_option_two_name' => $product['variant_option_two_name'],
                         'variant_option_two_value' => $product['variant_option_two_value'],
                         'variant_option_three_name' => $product['variant_option_three_name'],
-                        'variant_option_three_value' => $product['variant_option_three_value']
+                        'variant_option_three_value' => $product['variant_option_three_value'],
                     ]);
                     $k += 1;
                 }
             }
-            Log::info('Already Inserted ' . $k . ' products');
         }
-        Log::info('Already Done with ' . $nb_pages . ' pages');
     }
 }

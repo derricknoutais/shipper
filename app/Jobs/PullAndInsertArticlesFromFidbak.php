@@ -31,7 +31,6 @@ class PullAndInsertArticlesFromFidbak implements ShouldQueue
      */
     public function handle(): void
     {
-        Log::info('|_|_|_| - Pulling and Inserting Articles - |_|_|_|');
         $articles = Http::timeout(6000)
             ->get(env('FIDBAK_URL') . '/api/articles')
             ->json();
@@ -41,6 +40,5 @@ class PullAndInsertArticlesFromFidbak implements ShouldQueue
         foreach (array_chunk($articles, 1000) as $data) {
             DB::table('articles')->insert($data);
         }
-        Log::info('|_|_|_| - Done With Articles - |_|_|_|');
     }
 }

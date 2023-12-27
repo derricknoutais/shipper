@@ -29,7 +29,6 @@ class SortAndInsertHandles implements ShouldQueue
      */
     public function handle(): void
     {
-        Log::info('***** Starting to handle Handles *****');
         // Inserer les Nouveaux Handles
         $distinct_handles = DB::table('products')
             ->distinct()
@@ -46,6 +45,5 @@ class SortAndInsertHandles implements ShouldQueue
                 'name' => $handle_name,
             ]);
         }
-        Log::info('***** Done Handling Handles *****');
     }
 }

@@ -38,8 +38,6 @@ class InsertPulledProductsToDatabase implements ShouldQueue
      */
     public function handle()
     {
-        Log::info('%%%%% Starting to Insert Products %%%%');
-
         $products = json_decode(Redis::get('shipper_pulled_products'), true);
         // return sizeof($products);
 
@@ -67,10 +65,8 @@ class InsertPulledProductsToDatabase implements ShouldQueue
         // DB::table('products')->upsert($final_prods->toArray(), ['id'], ['id', 'name', 'variant_parent_id', 'variant_name', 'variant_option_one_value', 'variant_option_two_value', 'variant_option_three_value', 'handle_name', 'sku', 'price_including_tax', 'price_excluding_tax', 'active', 'has_inventory', 'is_composite', 'description', 'created_at', 'updated_at', 'deleted_at', 'source', 'supply_price', 'version', 'type', 'is_active']);
         Product::all()->map->delete();
         foreach (array_chunk($final_prods->toArray(), 2000, true) as $data) {
-            Log::info(sizeof($data));
             DB::table('products')->insert($data);
             // DB::table('products')->upsert($data, ['id'], ['id', 'name', 'variant_parent_id', 'variant_name', 'variant_option_one_value', 'variant_option_two_value', 'variant_option_three_value', 'handle_name', 'sku', 'price_including_tax', 'price_excluding_tax', 'active', 'has_inventory', 'is_composite', 'description', 'created_at', 'updated_at', 'deleted_at', 'source', 'supply_price', 'version', 'type', 'is_active']);
         }
-        Log::info('%%%%% Done Inserting Products %%%%%');
     }
 }

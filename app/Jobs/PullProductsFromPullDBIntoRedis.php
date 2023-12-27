@@ -33,11 +33,9 @@ class PullProductsFromPullDBIntoRedis implements ShouldQueue
      */
     public function handle()
     {
-        Log::info('\/\/\/ - Pulling Products - \/\/\/');
         $response = Http::timeout(6000)
             ->get(env('PULLDB_URL') . '/api/products')
             ->json();
         Redis::set('shipper_pulled_products', json_encode($response));
-        Log::info('/\/\/\ - Done Pulling Products - /\/\/\\');
     }
 }

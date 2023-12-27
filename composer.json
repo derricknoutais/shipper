@@ -12,7 +12,6 @@
         "fzaninotto/faker": "^1.5",
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^10.0",
-        "laravel/telescope": "*",
         "laravel/tinker": "^2.0",
         "laravel/ui": "*",
         "maatwebsite/excel": "^3.1",

@@ -34,9 +34,9 @@ header('Access-Control-Allow-Origin:  *');
 header('Access-Control-Allow-Methods:  POST, GET, OPTIONS, PUT, DELETE');
 header('Access-Control-Allow-Headers:  X-CSRF-TOKEN, X-Requested-With, Content-Type, X-Auth-Token, Origin, Authorization');
 
-if (env('APP_ENV') === 'local') {
-    Auth::loginUsingId(1);
-}
+// if (env('APP_ENV') === 'local') {
+//     Auth::loginUsingId(1);
+// }
 
 Route::get('/section/{section_id}', function ($section_id) {
     return Sectionnable::where('section_id', $section_id)->count();
@@ -63,7 +63,6 @@ Route::get('/update-products', function () {
 });
 
 Route::get('/test', function () {
-
     // Inserer les Nouveaux Handles
     $distinct_handles = DB::table('products')
         ->distinct()
@@ -80,7 +79,6 @@ Route::get('/test', function () {
             'name' => $handle_name,
         ]);
     }
-
 });
 
 Route::middleware(['auth'])->group(function () {

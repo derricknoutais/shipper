@@ -25,15 +25,14 @@ class DemandeController extends Controller
 
     public function dispatchSectionnables(Commande $commande)
     {
+        GenererDemandes::dispatch($commande);
         dispatch($job = new GenererDemandes($commande));
         return $job->getResponse();
     }
 
     public function destroySectionnable($id)
     {
-        DB::table('demande_sectionnable')
-            ->where('id', $id)
-            ->delete();
+        DB::table('demande_sectionnable')->where('id', $id)->delete();
     }
 
     public function store(Request $request)

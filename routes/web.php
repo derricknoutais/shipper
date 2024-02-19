@@ -34,9 +34,9 @@ header('Access-Control-Allow-Origin:  *');
 header('Access-Control-Allow-Methods:  POST, GET, OPTIONS, PUT, DELETE');
 header('Access-Control-Allow-Headers:  X-CSRF-TOKEN, X-Requested-With, Content-Type, X-Auth-Token, Origin, Authorization');
 
-// if (env('APP_ENV') === 'local') {
-//     Auth::loginUsingId(1);
-// }
+if (env('APP_ENV') === 'local') {
+    Auth::loginUsingId(1);
+}
 
 Route::get('/section/{section_id}', function ($section_id) {
     return Sectionnable::where('section_id', $section_id)->count();
@@ -50,11 +50,7 @@ Route::get('/', function () {
 });
 Route::get('/tesst', function () {
     // $job = new SyncSales(Carbon::now()->subDays(1));
-    SyncSales::dispatch(
-        Carbon::now()
-            ->subDays(1)
-            ->format('Y-m-dH:i:s'),
-    );
+    SyncSales::dispatch(Carbon::now()->subDays(1)->format('Y-m-dH:i:s'));
     // return 1;
 });
 Route::get('/update-products', function () {
@@ -112,15 +108,9 @@ Route::middleware(['auth'])->group(function () {
         if ($sectionnable_type === 'Product') {
             $commande_en_cours = Commande::where('state', '<>', 'Terminé')->pluck('id');
             $sections_en_cours = Section::whereIn('commande_id', $commande_en_cours)->pluck('id');
-            $sectionnables = Sectionnable::where('sectionnable_id', $selected_article)
-                ->whereIn('section_id', $sections_en_cours)
-                ->pluck('id');
-            $bc_sectionnable_pluck = DB::table('bon_commande_sectionnable')
-                ->whereIn('sectionnable_id', $sectionnables)
-                ->pluck('bon_commande_id');
-            $bc_sectionnable = DB::table('bon_commande_sectionnable')
-                ->whereIn('sectionnable_id', $sectionnables)
-                ->get();
+            $sectionnables = Sectionnable::where('sectionnable_id', $selected_article)->whereIn('section_id', $sections_en_cours)->pluck('id');
+            $bc_sectionnable_pluck = DB::table('bon_commande_sectionnable')->whereIn('sectionnable_id', $sectionnables)->pluck('bon_commande_id');
+            $bc_sectionnable = DB::table('bon_commande_sectionnable')->whereIn('sectionnable_id', $sectionnables)->get();
             $bon_commande = BonCommande::whereIn('id', $bc_sectionnable_pluck)->get();
             foreach ($bon_commande as $bc) {
                 $bc['commande'] = Commande::find($bc->commande_id);
@@ -137,9 +127,7 @@ Route::middleware(['auth'])->group(function () {
     });
     Route::post('/ajouter-non-dispo', function (Request $request) {
         $commande = Commande::find($request->commande);
-        $sectionnables = Sectionnable::whereIn('section_id', $commande->sections->pluck('id'))
-            ->doesntHave('bon_commande')
-            ->get();
+        $sectionnables = Sectionnable::whereIn('section_id', $commande->sections->pluck('id'))->doesntHave('bon_commande')->get();
         $array = [];
         foreach ($sectionnables as $sectionnable) {
             $array[] = [
@@ -390,9 +378,7 @@ Route::middleware(['auth'])->group(function () {
         $bcs = DB::table('bon_commandes')
             ->whereIn('demande_id', [4, 5, 6, 7, 8])
             ->pluck('id');
-        DB::table('bon_commande_sectionnable')
-            ->whereIn('bon_commande_id', $bcs)
-            ->delete();
+        DB::table('bon_commande_sectionnable')->whereIn('bon_commande_id', $bcs)->delete();
         DB::table('bon_commandes')
             ->whereIn('demande_id', [4, 5, 6, 7, 8])
             ->delete();
@@ -426,9 +412,7 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::get('/consignment/{product}', function ($product) {
-        return $cons = DB::table('consignment_product')
-            ->where('product_id', $product)
-            ->sum('count');
+        return $cons = DB::table('consignment_product')->where('product_id', $product)->sum('count');
     });
 
     Route::get('/subzero/{product}/{apres?}/{avant?}', function ($product, $apres = null, $avant = null) {
@@ -499,9 +483,7 @@ Route::middleware(['auth'])->group(function () {
         $totaux['inserted'] = 0;
         $totaux['duplicatas'] = [];
         // Pour chaque produit de la commande
-        $sections = Section::where('commande_id', $commande_id)
-            ->with('sectionnables')
-            ->get();
+        $sections = Section::where('commande_id', $commande_id)->with('sectionnables')->get();
         // Pour chaque produit du reorder
         foreach ($data['data'] as $product) {
             $found = false;

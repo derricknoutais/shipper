@@ -39,27 +39,25 @@ class GenererDemandes implements ShouldQueue
             Exemple : Toyota C... / Avensis / Joints / Nouveaux Produits sont des sections
         */
         $i = 0;
-        foreach($this->commande->sections as $section){
+        foreach ($this->commande->sections as $section) {
             /***
                 Chaque Section a des sectionnables. Les sectionnables sont des éléments qui appartiennent à des sections
                 Il existe 2 types de sectionnables : Les Produits Vend & Les Articles Demandées par les clients dans Fiche de Renseignement
                 Donc Pour chaque sectionnable de chaque Section
             */
 
-            foreach($section->sectionnables as $sectionnable){
-
-                if($sectionnable->sectionnable_type === 'App\\Product'){
-                    if(isset($sectionnable->product->fournisseurs)){
-
-                        foreach($sectionnable->product->fournisseurs as $fournisseur){
-                            if($demande = Demande::where( ['fournisseur_id' => $fournisseur->id, 'commande_id' => $this->commande->id])->first() ){
-                                DB::table('demande_sectionnable')->insert([
+            foreach ($section->sectionnables as $sectionnable) {
+                if ($sectionnable->sectionnable_type === 'App\\Product') {
+                    if (isset($sectionnable->product->fournisseurs)) {
+                        foreach ($sectionnable->product->fournisseurs as $fournisseur) {
+                            if ($demande = Demande::where(['fournisseur_id' => $fournisseur->id, 'commande_id' => $this->commande->id])->first()) {
+                                DB::table('demande_sectionnable')->insertOrIgnore([
                                     'sectionnable_id' => $sectionnable->id,
                                     'demande_id' => $demande->id,
                                     'offre' => 0,
                                     'quantite_offerte' => 0,
                                     'created_at' => now(),
-                                    'updated_at' => now()
+                                    'updated_at' => now(),
                                 ]);
                                 $i++;
                             } else {
@@ -67,16 +65,16 @@ class GenererDemandes implements ShouldQueue
                                     'nom' => $fournisseur->nom,
                                     'commande_id' => $this->commande->id,
                                     'fournisseur_id' => $fournisseur->id,
-									'created_at' => now(),
-									'updated_at' => now()
+                                    'created_at' => now(),
+                                    'updated_at' => now(),
                                 ]);
-                                DB::table('demande_sectionnable')->insert([
+                                DB::table('demande_sectionnable')->insertOrIgnore([
                                     'sectionnable_id' => $sectionnable->id,
                                     'demande_id' => $demande->id,
                                     'offre' => 0,
                                     'quantite_offerte' => 0,
                                     'created_at' => now(),
-                                    'updated_at' => now()
+                                    'updated_at' => now(),
                                 ]);
                                 $i++;
                             }

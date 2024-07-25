@@ -427,7 +427,7 @@
                                                         v-if="sectionnable.product">@{{ sectionnable.product.variant_name }}</a>
                                                     <a :href="'https://stapog.com/fiche-renseignement/' + sectionnable
                                                         .fiche_renseignement_id"
-                                                        v-if="section.products[index]">@{{ section.products[index].variant_name }}</a>
+                                                        v-else-if="section.products[index]">@{{ section.products[index].variant_name }}</a>
                                                 </td>
                                                 <td>
                                                     <div class="form-group">

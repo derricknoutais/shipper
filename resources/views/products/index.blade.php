@@ -7,26 +7,24 @@
             <form action="/product" method="GET" class="tw-flex tw-w-full">
                 <select name="handle" class="form-control tw-w-1/4">
                     @foreach ($handles as $handle)
-
                         <option
-                        @isset($handle_filter)
+                            @isset($handle_filter)
                             @if ($handle->id == $handle_filter)
                                 selected
                             @endif
                         @endisset
-                        value="{{ $handle->id }}">{{ $handle->name }}</option>
+                            value="{{ $handle->id }}">{{ $handle->name }}</option>
                     @endforeach
                 </select>
                 <button type="submit" class="btn btn-primary tw-ml-5 ">Filtrer</button>
             </form>
-            <div class="tw-w-full tw-flex tw-mt-5" >
-                <multiselect
-                    class="tw-w-2/4"
-                    v-if="selected_products.length > 0"
-                    v-model="selected_fournisseur" label="nom"
-                    track-by="nom" :options="fournisseurs" :multiple="true"
-                    :taggable="true" ></multiselect>
-                <button v-if="selected_products.length > 0 && selected_fournisseur.length > 0" class="btn btn-primary tw-ml-1 tw-w-1/4" @click="addTagsToMultipleProducts">Ajouter @{{ selected_fournisseur.length }} Fournisseurs à @{{ selected_products.length }} Produits</button>
+            <div class="tw-w-full tw-flex tw-mt-5">
+                <multiselect class="tw-w-2/4" v-if="selected_products.length > 0" v-model="selected_fournisseur"
+                    label="nom" track-by="nom" :options="fournisseurs" :multiple="true" :taggable="true">
+                </multiselect>
+                <button v-if="selected_products.length > 0 && selected_fournisseur.length > 0"
+                    class="btn btn-primary tw-ml-1 tw-w-1/4" @click="addTagsToMultipleProducts">Ajouter
+                    @{{ selected_fournisseur.length }} Fournisseurs à @{{ selected_products.length }} Produits</button>
             </div>
             <table class="table">
                 <thead>
@@ -45,17 +43,17 @@
                             <input type="checkbox" :value="product.id" v-model="selected_products">
                         </td>
                         <td>@{{ product.handle }}</td>
-                        <td>@{{ product.name }}</td>
+                        <td>@{{ product.variant_name }}</td>
                         <td>@{{ product.sku }}</td>
                         <td>@{{ product.price }}</td>
                         <td class="tw-w-64">
-                            <multiselect v-model="product.fournisseurs" label="nom"
-                                track-by="nom" :options="fournisseurs" :multiple="true" :taggable="true" @input="addTag(product)"></multiselect>
+                            <multiselect v-model="product.fournisseurs" label="nom" track-by="nom"
+                                :options="fournisseurs" :multiple="true" :taggable="true"
+                                @input="addTag(product)"></multiselect>
                         </td>
                     </tr>
                 </tbody>
             </table>
         </div>
     </product-index>
-
 @endsection

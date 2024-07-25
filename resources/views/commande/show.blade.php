@@ -280,11 +280,24 @@
                                 :href="'#section' + section.id" role="tab" id="section1HeaderId">
                                 @{{ section.nom }}
                             </h5>
-                            <div class="tw-w-1/5">
-                                <span class="tw-w-1/2" v-if="section.products.length > 0">@{{ numberOfElementsOrdered(section) }}
-                                    Commandés / @{{ section.products.length }} Produits</span>
-                                <span class="tw-w-1/2 tw-ml-5" v-if="section.articles.length > 0">@{{ numberOfElementsOrdered(section) }}
-                                    Commandés / @{{ section.articles.length }} Nouveaux Produits</span>
+                            <div class="tw-w-1/5 flex flex-col">
+                                <p class="" v-if="section.products.length > 0">
+                                    @{{ numberOfElementsOrdered(section).products }}
+                                    Commandés / @{{ section.products.length }} Produits
+                                    <span class="tw-italic tw-text-red-500">
+                                        @{{ ((numberOfElementsOrdered(section).products / section.products.length) * 100).toFixed(1) }}%
+                                    </span>
+
+                                </p>
+                                <p class="" v-if="section.articles.length > 0">
+                                    @{{ numberOfElementsOrdered(section).articles }}
+                                    Commandés / @{{ section.articles.length }} Nouveaux Produits
+
+                                    <span class="tw-italic tw-text-red-500">
+                                        @{{ ((numberOfElementsOrdered(section).articles / section.articles.length) * 100).toFixed(1) }}%
+                                    </span>
+
+                                </p>
                             </div>
                             <div>
                                 <i class="fas fa-edit tw-mx-3 tw-text-blue-700 tw-cursor-pointer"

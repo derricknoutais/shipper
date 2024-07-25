@@ -2394,10 +2394,17 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
   },
   methods: (_methods = {
     numberOfElementsOrdered: function numberOfElementsOrdered(section) {
-      var total = 0;
+      var total = {
+        products: 0,
+        articles: 0
+      };
       section.sectionnables.forEach(function (sectionnable) {
         if (sectionnable.bon_commande.length > 0) {
-          total += 1;
+          if (sectionnable.sectionnable_type === 'App\\Article') {
+            total.articles += 1;
+          } else {
+            total.products += 1;
+          }
         }
       });
       return total;

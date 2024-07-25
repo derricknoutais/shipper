@@ -102,10 +102,14 @@ export default {
     },
     methods: {
         numberOfElementsOrdered(section) {
-            var total = 0;
+            var total = { products: 0, articles: 0 };
             section.sectionnables.forEach(sectionnable => {
                 if (sectionnable.bon_commande.length > 0) {
-                    total += 1
+                    if (sectionnable.sectionnable_type === 'App\\Article') {
+                        total.articles += 1
+                    } else {
+                        total.products += 1
+                    }
                 }
             })
             return total;

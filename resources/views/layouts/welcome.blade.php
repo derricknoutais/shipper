@@ -29,7 +29,7 @@
                     <a class="tw-mx-3" href="/commande">Commandes</a>
                     <a class="tw-mx-3" href="/product">Produits</a>
                     <a class="tw-mx-3" href="/fournisseur">Fournisseur</a>
-                    <a class="tw-mx-3" href="/translation">Traductions</a>
+                    <a class="tw-mx-3" href="/handle">Traductions</a>
                     {{-- <a class="tw-mx-3" href="/inventory-count">Inventory Count</a> --}}
                 </nav>
             @else

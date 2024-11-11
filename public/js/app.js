@@ -2395,6 +2395,7 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
           });
         });
       }
+      this.loadProductSold();
     }
   },
   methods: (_methods = {

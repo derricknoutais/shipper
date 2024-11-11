@@ -403,12 +403,13 @@
                                                         class="tw--mx-4 tw--my-2 tw-overflow-x-auto sm:tw--mx-6 lg:tw--mx-8">
                                                         <div
                                                             class="tw-inline-block tw-min-w-full tw-py-2 tw-align-middle sm:tw-px-6 lg:tw-px-8">
-                                                            <table class="tw-min-w-full tw-divide-y tw-divide-gray-300">
+                                                            <table
+                                                                class="tw-min-w-full tw-divide-y tw-divide-gray-300 tw-bg-white">
                                                                 <thead>
                                                                     <tr>
                                                                         <th scope="col" v-show="sales_report"
                                                                             v-for="(sale, period) in sales_report "
-                                                                            class="tw-text-center tw-py-3.5 tw-pl-4 tw-pr-3 tw-text-sm tw-font-semibold tw-text-gray-900 sm:tw-pl-0">
+                                                                            class="tw-text-center tw-py-3.5 tw-pl-4 tw-pr-3 tw-text-sm tw-font-semibold tw-text-gray-900">
                                                                             @{{ period }}</th>
 
                                                                     </tr>
@@ -417,7 +418,7 @@
                                                                     <tr class="tw-divide-x tw-divide-gray-700">
                                                                         <td v-show="sales_report"
                                                                             v-for="sale in sales_report "
-                                                                            class="tw-text-center tw-whitespace-nowrap tw-py-4 tw-pl-4 tw-pr-3 tw-text-sm tw-font-medium tw-text-gray-900 sm:tw-pl-0">
+                                                                            class="tw-text-center tw-whitespace-nowrap tw-py-4 tw-pl-4 tw-pr-3 tw-text-sm tw-font-medium tw-text-gray-900">
                                                                             @{{ sale }}</td>
 
                                                                     </tr>

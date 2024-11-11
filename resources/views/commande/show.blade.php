@@ -396,8 +396,8 @@
                                         </div>
 
                                         <div>
-
-                                            <div class="tw-px-4 sm:tw-px-6 lg:tw-px-8">
+                                            <i class="fas fa-spinner fa-spin" v-if="isLoading.vend_report"></i>
+                                            <div class="tw-px-4 sm:tw-px-6 lg:tw-px-8" v-else>
                                                 <div class="tw-mt-8 tw-flow-root">
                                                     <div
                                                         class="tw--mx-4 tw--my-2 tw-overflow-x-auto sm:tw--mx-6 lg:tw--mx-8">

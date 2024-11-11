@@ -24,7 +24,8 @@ export default {
                 stock: false,
                 reorder_point: false,
                 majStock: false,
-                article: false
+                article: false,
+                vend_report: false
             },
             reorderPoint: null,
             articlesApi: [],
@@ -600,6 +601,8 @@ export default {
                 })
         },
         loadProductSold() {
+            this.isLoading.vend_report = true;
+            this.$forceUpdate;
             var link = ''
             if (!this.selected_element) {
                 return 0;
@@ -626,6 +629,7 @@ export default {
             }
             axios.get(link).then(response => {
                 console.log(response.data)
+                this.isLoading.vend_report = false
                 this.sales_report = response.data
                 this.$forceUpdate()
             })

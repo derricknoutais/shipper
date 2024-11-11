@@ -2324,7 +2324,8 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
         stock: false,
         reorder_point: false,
         majStock: false,
-        article: false
+        article: false,
+        vend_report: false
       },
       reorderPoint: null,
       articlesApi: [],
@@ -2894,6 +2895,8 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
     });
   }), _defineProperty(_methods, "loadProductSold", function loadProductSold() {
     var _this15 = this;
+    this.isLoading.vend_report = true;
+    this.$forceUpdate;
     var link = '';
     if (!this.selected_element) {
       return 0;
@@ -2919,6 +2922,7 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
     }
     axios.get(link).then(function (response) {
       console.log(response.data);
+      _this15.isLoading.vend_report = false;
       _this15.sales_report = response.data;
       _this15.$forceUpdate();
     });

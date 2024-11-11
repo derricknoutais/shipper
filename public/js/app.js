@@ -2346,7 +2346,8 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
       line_items_date_after: '',
       line_items_date_before: '',
       sale_report_search_type: 'Quarter',
-      numberOfQuarters: 8
+      numberOfQuarters: 8,
+      sales_report: null
     };
   },
   watch: {
@@ -2897,10 +2898,10 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
       return 0;
     }
     switch (this.sale_report_search_type) {
-      case 'Free':
+      case 'Quarter':
         link = 'https://pulldb.stapog.com/api/line-items/by-quarter?product_id=' + this.selected_element.id + '&number_quarters=' + this.numberOfQuarters;
         break;
-      default:
+      case 'Free':
         link = 'https://pulldb.stapog.com/api/line-items?product_id=' + this.selected_element.id;
         if (this.selected_element) {
           link += '?product_id=' + this.selected_element.id;
@@ -2912,10 +2913,12 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
           link += '&date_before=' + this.line_items_date_before;
         }
         break;
+      default:
+        break;
     }
     axios.get(link).then(function (response) {
       console.log(response.data);
-      _this15.selected_element.sales = response.data;
+      _this15.sales_report = response.data;
       _this15.$forceUpdate();
     });
   }), _methods),

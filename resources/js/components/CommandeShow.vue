@@ -48,6 +48,7 @@ export default {
             sale_report_search_type: 'Quarter',
 
             numberOfQuarters: 8,
+            sales_report: null
         }
     },
     watch: {
@@ -603,11 +604,10 @@ export default {
                 return 0;
             }
             switch (this.sale_report_search_type) {
-                case 'Free':
+                case 'Quarter':
                     link = 'https://pulldb.stapog.com/api/line-items/by-quarter?product_id=' + this.selected_element.id + '&number_quarters=' + this.numberOfQuarters
                     break;
-
-                default:
+                case 'Free':
                     link = 'https://pulldb.stapog.com/api/line-items?product_id=' + this.selected_element.id
 
                     if (this.selected_element) {
@@ -620,10 +620,12 @@ export default {
                         link += '&date_before=' + this.line_items_date_before
                     }
                     break;
+                default:
+                    break;
             }
             axios.get(link).then(response => {
                 console.log(response.data)
-                this.selected_element.sales = response.data
+                this.sales_report = response.data
                 this.$forceUpdate()
             })
         }

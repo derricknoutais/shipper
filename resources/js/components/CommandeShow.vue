@@ -43,6 +43,11 @@ export default {
             list: false,
             label: '',
             found: false,
+            line_items_date_after: '',
+            line_items_date_before: '',
+            sale_report_search_type: 'Quarter',
+
+            numberOfQuarters: 8,
         }
     },
     watch: {
@@ -592,6 +597,36 @@ export default {
                     console.log(error)
                 })
         },
+        loadProductSold() {
+            var link = ''
+            if (!this.selected_element) {
+                return 0;
+            }
+            switch (this.sale_report_search_type) {
+                case 'Free':
+                    link = 'https://pulldb.stapog.com/api/line-items/by-quarter?product_id=' + this.selected_element.id + '&number_quarters=' + this.numberOfQuarters
+                    break;
+
+                default:
+                    link = 'https://pulldb.stapog.com/api/line-items?product_id=' + this.selected_element.id
+
+                    if (this.selected_element) {
+                        link += '?product_id=' + this.selected_element.id
+                    }
+                    if (this.line_items_date_after) {
+                        link += '&date_after=' + this.line_items_date_after
+                    }
+                    if (this.line_items_date_before) {
+                        link += '&date_before=' + this.line_items_date_before
+                    }
+                    break;
+            }
+            axios.get(link).then(response => {
+                console.log(response.data)
+                this.selected_element.sales = response.data
+                this.$forceUpdate()
+            })
+        }
 
     },
     computed: {

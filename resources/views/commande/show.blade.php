@@ -357,23 +357,46 @@
                                         <span v-else>@{{ selected_element.stock }}</span>
                                     </div>
 
-                                    {{-- Subzero --}}
+                                    {{-- VEND --}}
                                     <div
-                                        class="tw-w-full tw-justify-between tw-mr-4 tw-mt-1 tw-items-center tw-flex tw-bg-gray-200 tw-p-3">
+                                        class="tw-w-full tw-justify-between tw-mr-4 tw-mt-1 tw-items-start tw-flex tw-flex-col tw-bg-gray-200 tw-p-3">
                                         <div class="tw-flex">
-                                            <p class="tw-text-lg tw-mr-4">Vente (Vend) :</p>
+                                            <p class="tw-text-lg tw-mr-4">Rapports de Vente</p>
                                             <i class="fas fa-spinner fa-spin"
                                                 v-if="selected_element && selected_element.sales_loading"></i>
                                             <span v-else>@{{ selected_element.sales }}</span>
 
                                         </div>
-                                        <div>
-                                            <span class="tw-mx-3">Entre </span>
-                                            <input type="date" {{-- v-model="sales_date_apres" --}}>
-                                            <span class="tw-mx-3">Et </span>
-                                            <input type="date" {{-- v-model="sales_date_avant" --}}>
+
+                                        <div class="tw-w-full tw-mt-1 form-check tw-flex tw-justify-start">
+                                            <label class="form-check-label">
+                                                <input type="radio" class="" v-model="sale_report_search_type"
+                                                    id="" value="Quarter">
+                                                Par Trimestre
+                                            </label>
+                                            <label class="form-check-label">
+                                                <input type="radio" class="" v-model="sale_report_search_type"
+                                                    id="" value="Free">
+                                                Free Mode
+                                            </label>
                                         </div>
+
+                                        <div v-show="sale_report_search_type === 'Quarter'">
+                                            <span class="tw-mx-3">Nombre de Trimestre</span>
+                                            <input type="number" v-model="numberOfQuarters">
+
+                                            <button @click="loadProductSold()">Chercher</button>
+                                        </div>
+                                        <div class="t-mt-2" v-show="sale_report_search_type === 'Free'">
+                                            <span class="tw-mx-3">Entre </span>
+                                            <input type="date" v-model="line_items_date_after">
+                                            <span class="tw-mx-3">Et </span>
+                                            <input type="date" v-model="line_items_date_before">
+                                            <button @click="loadProductSold()">Chercher</button>
+                                        </div>
+
                                     </div>
+
                                     {{-- Subzero --}}
                                     <div
                                         class="tw-w-full tw-justify-between tw-mr-4 tw-mt-1 tw-items-center tw-flex tw-bg-gray-200 tw-p-3">

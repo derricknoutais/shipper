@@ -2342,7 +2342,11 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
       sectionnable_type: false,
       list: false,
       label: '',
-      found: false
+      found: false,
+      line_items_date_after: '',
+      line_items_date_before: '',
+      sale_report_search_type: 'Quarter',
+      numberOfQuarters: 8
     };
   },
   watch: {
@@ -2886,6 +2890,34 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
     })["catch"](function (error) {
       console.log(error);
     });
+  }), _defineProperty(_methods, "loadProductSold", function loadProductSold() {
+    var _this15 = this;
+    var link = '';
+    if (!this.selected_element) {
+      return 0;
+    }
+    switch (this.sale_report_search_type) {
+      case 'Free':
+        link = 'https://pulldb.stapog.com/api/line-items/by-quarter?product_id=' + this.selected_element.id + '&number_quarters=' + this.numberOfQuarters;
+        break;
+      default:
+        link = 'https://pulldb.stapog.com/api/line-items?product_id=' + this.selected_element.id;
+        if (this.selected_element) {
+          link += '?product_id=' + this.selected_element.id;
+        }
+        if (this.line_items_date_after) {
+          link += '&date_after=' + this.line_items_date_after;
+        }
+        if (this.line_items_date_before) {
+          link += '&date_before=' + this.line_items_date_before;
+        }
+        break;
+    }
+    axios.get(link).then(function (response) {
+      console.log(response.data);
+      _this15.selected_element.sales = response.data;
+      _this15.$forceUpdate();
+    });
   }), _methods),
   computed: {
     totalNumberOfProductsOrdered: function totalNumberOfProductsOrdered() {},
@@ -2996,7 +3028,7 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
     }
   },
   created: function created() {
-    var _this15 = this;
+    var _this16 = this;
     this.sectionnable_type = 'Product';
     if (this.commande_prop) {
       this.commande = this.commande_prop;
@@ -3024,9 +3056,9 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
     });
     axios.post('https://stapog.com/article/api/bulk-fetch', article_ids).then(function (response) {
       console.log(response.data);
-      _this15.articlesFetched = response.data;
-      _this15.articlesFetched.forEach(function (artFetched) {
-        _this15.articles_prop.forEach(function (artProp) {
+      _this16.articlesFetched = response.data;
+      _this16.articlesFetched.forEach(function (artFetched) {
+        _this16.articles_prop.forEach(function (artProp) {
           if (artFetched.id == artProp.sectionnable_id) {
             artFetched.pivot = {
               section_id: artProp.section_id,
@@ -3036,18 +3068,18 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
           }
         });
       });
-      _this15.articlesFetched.forEach(function (article, index) {
+      _this16.articlesFetched.forEach(function (article, index) {
         article.message = {
           text: '',
           color: ''
         };
-        _this15.commande.sections.forEach(function (section) {
+        _this16.commande.sections.forEach(function (section) {
           if (section.id === article.pivot.section_id) {
             section.articles.push(article);
           }
         });
       });
-      _this15.$forceUpdate();
+      _this16.$forceUpdate();
     })["catch"](function (error) {
       console.log(error);
     });
